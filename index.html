@@ -80,7 +80,7 @@
   .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:9px;margin-bottom:2px;}
   .card-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:17px;color:var(--green);line-height:1.2;}
   .card-loc{font-size:12px;color:#6B7772;margin-bottom:11px;font-weight:500;}
-  .verified{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--white);background:var(--ok);padding:4px 8px;border-radius:20px;white-space:nowrap;}
+  .verified{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--white);background:var(--gold);padding:4px 8px;border-radius:20px;white-space:nowrap;}
   .verified svg{width:9px;height:9px;}
   .editor-note{background:linear-gradient(180deg,rgba(201,154,60,0.13),rgba(201,154,60,0.06));border:1px solid rgba(201,154,60,0.38);border-left:3px solid var(--gold);border-radius:8px;padding:9px 11px;margin-bottom:11px;}
   .editor-note .etxt{font-size:12.5px;line-height:1.45;color:#5A4A24;font-style:italic;}
@@ -108,7 +108,7 @@
   .drawer-close:hover{background:rgba(255,255,255,0.28);}
   .drawer-name{font-family:'Archivo',sans-serif;font-weight:800;font-size:22px;line-height:1.15;margin-bottom:5px;padding-right:36px;}
   .drawer-loc{font-size:13px;opacity:0.82;}
-  .drawer-verified{display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--green);background:var(--ok);color:#fff;padding:4px 9px;border-radius:20px;margin-top:10px;}
+  .drawer-verified{display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;background:var(--gold);color:#fff;padding:4px 9px;border-radius:20px;margin-top:10px;}
   .drawer-verified svg{width:10px;height:10px;}
   .drawer-body{padding:20px 22px 30px;}
   .drawer-section{margin-bottom:20px;}
@@ -251,6 +251,8 @@ function filtered(){
   const q=v('f-search').trim().toLowerCase(),city=v('f-city'),hood=v('f-hood');
   return RECORDS.filter(r=>{
     const f=r.fields;
+    if(f.status!=='Live')return false;          // only Live rows ever show (also skips blank rows)
+    if(!f.name)return false;                     // extra guard against empty rows
     if(city&&f.city!==city)return false;
     if(hood&&f.neighborhood!==hood)return false;
     if(q){
@@ -269,12 +271,12 @@ function statCell(label,val){
 }
 
 function cardHTML(r){
-  const f=r.fields,verified=f.status==='Live',editor=f.editor_verified&&f.editor_review;
+  const f=r.fields,badge=!!f.editor_verified,hasTake=!!f.editor_review;
   return '<div class="card'+(r.id===activeId?' active':'')+'" data-id="'+r.id+'"><div class="card-body">'
     +'<div class="card-head"><div class="card-name">'+esc(f.name||'Unnamed')+'</div>'
-    +(verified?'<span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified</span>':'')+'</div>'
+    +(badge?'<span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</span>':'')+'</div>'
     +'<div class="card-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
-    +(editor?'<div class="editor-note"><div class="etxt">'+esc(clip(f.editor_review,150))+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div>':'')
+    +(hasTake?'<div class="editor-note"><div class="etxt">'+esc(clip(f.editor_review,150))+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div>':'')
     +'<div class="tags">'+(f.tags||[]).slice(0,4).map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>'
     +'<div class="stats">'+statCell('Wifi',f.wifi_status)+statCell('Outlets',f.outlet_count)+statCell('Noise',f.noise_level)+'</div>'
     +'<div class="card-foot">'
@@ -298,8 +300,8 @@ function renderMap(recs){
   const pts=[];
   recs.forEach(r=>{
     const f=r.fields;if(!f.lat||!f.long)return;
-    const verified=f.status==='Live';
-    const mk=L.circleMarker([f.lat,f.long],{radius:8,color:'#fff',weight:2.5,fillColor:verified?'#2E9E6B':'#C99A3C',fillOpacity:0.95});
+    const badge=!!f.editor_verified;
+    const mk=L.circleMarker([f.lat,f.long],{radius:8,color:'#fff',weight:2.5,fillColor:badge?'#C99A3C':'#043B26',fillOpacity:0.95});
     mk.bindPopup(
       '<div class="pop-name">'+esc(f.name||'Unnamed')+'</div>'
       +'<div class="pop-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
@@ -321,7 +323,7 @@ function setActive(id,pan){
 
 function openDrawer(id){
   const r=RECORDS.find(x=>x.id===id);if(!r)return;
-  const f=r.fields,verified=f.status==='Live',editor=f.editor_verified&&f.editor_review;
+  const f=r.fields,badge=!!f.editor_verified,hasTake=!!f.editor_review;
   setActive(id,true);
   const dc=(label,val)=>'<div class="detail-cell"><div class="dl">'+label+'</div><div class="dv '+valClass(val)+'">'+((!val||val==='Unconfirmed')?'Not yet confirmed':esc(val))+'</div></div>';
   const gmaps=f.google_place_id?'https://www.google.com/maps/place/?q=place_id:'+f.google_place_id:(f.lat?'https://www.google.com/maps/search/?api=1&query='+f.lat+','+f.long:'');
@@ -329,9 +331,9 @@ function openDrawer(id){
     '<div class="drawer-head"><button class="drawer-close" onclick="closeDrawer()">×</button>'
     +'<div class="drawer-name">'+esc(f.name||'Unnamed')+'</div>'
     +'<div class="drawer-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
-    +(verified?'<div class="drawer-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</div>':'')
+    +(badge?'<div class="drawer-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</div>':'')
     +'</div><div class="drawer-body">'
-    +(editor?'<div class="drawer-section"><h4>Editor\'s Take</h4><div class="editor-note"><div class="etxt">'+esc(f.editor_review)+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div></div>':'')
+    +(hasTake?'<div class="drawer-section"><h4>Editor\'s Take</h4><div class="editor-note"><div class="etxt">'+esc(f.editor_review)+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div></div>':'')
     +'<div class="drawer-section"><h4>Work-from stats</h4><div class="detail-grid">'
     +dc('Wifi',f.wifi_status)+dc('Outlets',f.outlet_count)+dc('Noise',f.noise_level)+dc('Sit for',f.seating_duration)+dc('AC',f.ac===true?'Yes':(f.ac===false?'No':f.ac))+dc('Laptop-friendly',f.laptop_friendly_staff)
     +'</div></div>'
