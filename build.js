@@ -6,6 +6,17 @@ const TABLE_NAME = 'Data Table';
 const SITE_URL = (process.env.SITE_URL || 'https://the-remote-cafe-ind.vercel.app').replace(/\/$/,'');
 const DIST = path.join(process.cwd(),'dist');
 
+const PUBLIC_FIELDS = [
+  'status','name','city','neighborhood','address','lat','long','editor_verified','editor_review',
+  'editor_verified_date','tags','wifi_status','outlet_count','noise_level','price_tier',
+  'last_confirmed_date','seating_duration','ac','laptop_friendly_staff','hours','google_place_id','website'
+];
+function publicRecord(r){
+  const fields={};
+  for(const key of PUBLIC_FIELDS) if(Object.prototype.hasOwnProperty.call(r.fields||{},key)) fields[key]=r.fields[key];
+  return {id:r.id,fields};
+}
+
 function esc(s=''){return String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function slugify(value=''){return String(value).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);}
 function fmt(v){return (!v || v==='Unconfirmed') ? 'Not yet confirmed' : esc(v);}
@@ -25,7 +36,7 @@ async function fetchRecords(){
       if(!r.ok)throw new Error(`Airtable returned ${r.status}`);
       const d=await r.json();records.push(...d.records);offset=d.offset;
     }while(offset);
-    return records.filter(r=>r.fields?.status==='Live'&&r.fields?.name).map(r=>({...r,slug:slugify(`${r.fields.name}-${r.fields.neighborhood||r.fields.city||''}`)}));
+    return records.filter(r=>r.fields?.status==='Live'&&r.fields?.name).map(r=>{const clean=publicRecord(r);return {...clean,slug:slugify(`${clean.fields.name}-${clean.fields.neighborhood||clean.fields.city||''}`)}});
   }catch(err){
     console.warn(`Airtable snapshot skipped: ${err.message}. The deployment will still succeed and the homepage will retry through /api/cafes.`);
     return [];
@@ -51,7 +62,7 @@ for(const r of records){
   const f=r.fields, city=f.city||'Mumbai', hood=f.neighborhood||'Other';
   if(!cities.has(city))cities.set(city,new Map()); const hm=cities.get(city); if(!hm.has(hood))hm.set(hood,[]); hm.get(hood).push(r);
   const canonical=`${SITE_URL}/cafe/${r.slug}/`; urls.push(canonical);
-  const schema=JSON.stringify({'@context':'https://schema.org','@type':'CafeOrCoffeeShop',name:f.name,url:canonical,address:{'@type':'PostalAddress',streetAddress:f.address||'',addressLocality:f.neighborhood||f.city||'',addressRegion:'Maharashtra',addressCountry:'IN'}}).replace(/</g,'\\u003c');
+  const schema=JSON.stringify({'@context':'https://schema.org','@type':'CafeOrCoffeeShop',name:f.name,url:canonical,address:{'@type':'PostalAddress',streetAddress:f.address||'',addressLocality:f.neighborhood||f.city||'',addressCountry:'IN'}}).replace(/</g,'\\u003c');
   const body=`<div class="crumbs"><a href="/">Directory</a> / ${f.city?`<a href="/${slugify(f.city)}/">${esc(f.city)}</a> / `:''}${esc(f.neighborhood||'Cafe')}</div><div class="hero"><h1>${esc(f.name)}</h1><div class="muted">${esc([f.neighborhood,f.city].filter(Boolean).join(', '))}</div>${f.editor_verified?'<p><span class="badge">Editor Verified</span></p>':''}</div>${f.editor_review?`<section><h2>Editor's Take</h2><div class="take">${esc(f.editor_review)}</div></section>`:''}<section><h2>Work-from details</h2><div class="grid"><div class="cell"><b>WiFi</b><br>${fmt(f.wifi_status)}</div><div class="cell"><b>Outlets</b><br>${fmt(f.outlet_count)}</div><div class="cell"><b>Noise</b><br>${fmt(f.noise_level)}</div><div class="cell"><b>Sit for</b><br>${fmt(f.seating_duration)}</div><div class="cell"><b>Laptop-friendly</b><br>${fmt(f.laptop_friendly_staff)}</div><div class="cell"><b>Price</b><br>${fmt(f.price_tier)}</div></div></section>${f.address?`<section><h2>Address</h2><p>${esc(f.address)}</p></section>`:''}<p class="muted">Details can change. Editor Verified is an earned TRC signal; unconfirmed fields are shown as such.</p><a class="back" href="/">← Back to the directory</a>`;
   const dir=path.join(DIST,'cafe',r.slug);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,'index.html'),shell({title:`${f.name} — work-friendly cafe | The Remote Cafe`,description:`Remote-work details for ${f.name}${f.neighborhood?` in ${f.neighborhood}`:''}: WiFi, outlets, noise and working conditions.`,canonical,body,schema}));
 }

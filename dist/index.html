@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Remote Cafe — Remote work friendly cafes in Mumbai</title>
 <meta name="description" content="A curated directory of remote-work-friendly cafes in Mumbai, with practical details on WiFi, outlets, noise and working conditions.">
-<link rel="canonical" href="__SITE_URL__/">
+<link rel="canonical" href="https://the-remote-cafe-ind.vercel.app/">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
 <style>
@@ -267,7 +267,7 @@
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 <script>
 /* Build-time snapshot. Fresh data is fetched privately through /api/cafes. */
-const INITIAL_RECORDS = __INITIAL_RECORDS_JSON__;
+const INITIAL_RECORDS = [];
 
 let RECORDS=[], map=null, markers=[], markerById={}, activeId=null;
 

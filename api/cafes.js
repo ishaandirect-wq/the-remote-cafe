@@ -1,6 +1,17 @@
 const BASE_ID = 'appymxbanp8tUDZdY';
 const TABLE_NAME = 'Data Table';
 
+const PUBLIC_FIELDS = [
+  'status','name','city','neighborhood','address','lat','long','editor_verified','editor_review',
+  'editor_verified_date','tags','wifi_status','outlet_count','noise_level','price_tier',
+  'last_confirmed_date','seating_duration','ac','laptop_friendly_staff','hours','google_place_id','website'
+];
+function publicRecord(r) {
+  const fields = {};
+  for (const key of PUBLIC_FIELDS) if (Object.prototype.hasOwnProperty.call(r.fields || {}, key)) fields[key] = r.fields[key];
+  return { id:r.id, fields };
+}
+
 function slugify(value='') {
   return String(value).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
     .replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);
@@ -20,10 +31,10 @@ async function getAllRecords() {
     records.push(...data.records);
     offset = data.offset;
   } while(offset);
-  return records.filter(r => r.fields?.status === 'Live' && r.fields?.name).map(r => ({
-    ...r,
-    slug: slugify(`${r.fields.name}-${r.fields.neighborhood || r.fields.city || ''}`)
-  }));
+  return records.filter(r => r.fields?.status === 'Live' && r.fields?.name).map(r => {
+    const clean = publicRecord(r);
+    return {...clean, slug: slugify(`${clean.fields.name}-${clean.fields.neighborhood || clean.fields.city || ''}`)};
+  });
 }
 
 export default async function handler(req,res) {
