@@ -4,7 +4,8 @@ const TABLE_NAME = 'Data Table';
 const PUBLIC_FIELDS = [
   'status','name','city','neighborhood','address','lat','long','editor_verified','editor_review',
   'editor_verified_date','tags','wifi_status','outlet_count','noise_level','price_tier',
-  'last_confirmed_date','seating_duration','ac','laptop_friendly_staff','hours','google_place_id','website'
+  'last_confirmed_date','seating_duration','ac','laptop_friendly_staff','hours','google_place_id','website',
+  'editorial_collections','workday_fit','homepage_priority','image_url','source','website_type'
 ];
 function publicRecord(r) {
   const fields = {};

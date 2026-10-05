@@ -1,552 +1,257 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Remote Cafe — Remote work friendly cafes in Mumbai</title>
-<meta name="description" content="A curated directory of remote-work-friendly cafes in Mumbai, with practical details on WiFi, outlets, noise and working conditions.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Remote Cafe — Cafes you can actually work from</title>
+<meta name="description" content="A curated guide to remote-work-friendly cafes in Mumbai, with practical notes on WiFi, outlets, noise and the work environment.">
 <link rel="canonical" href="https://the-remote-cafe-ind.vercel.app/">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
+<link rel="icon" href="/assets/favicon.png">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@1,600&display=swap');
-  :root{
-    --green:#043B26;--green-deep:#032B1B;--green-soft:#0A4E33;
-    --beige:#EBE3DD;--beige-hi:#F4EFEA;--white:#FFFFFF;
-    --gold:#C99A3C;--gold-dim:#A67D2E;--ok:#2E9E6B;--rust:#C0603A;--ink:#16201C;
-    --line:rgba(4,59,38,0.13);--shadow:0 2px 8px rgba(3,43,27,0.07),0 8px 24px rgba(3,43,27,0.05);
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{height:100%;}
-  body{font-family:'Inter',sans-serif;background:var(--beige);color:var(--ink);-webkit-font-smoothing:antialiased;overflow:hidden;}
+:root{
+  --green:#043B26;--green-2:#0B563B;--green-3:#E6EFE9;--beige:#EBE3DD;--paper:#F8F4EF;--paper-2:#F3ECE6;
+  --gold:#C99A3C;--ink:#16201C;--muted:#69736E;--line:rgba(4,59,38,.13);--line-2:rgba(4,59,38,.2);
+  --shadow:0 12px 34px rgba(41,32,24,.09);--shadow-soft:0 5px 18px rgba(41,32,24,.07);--radius:18px;--ease:cubic-bezier(.22,.8,.24,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button,a{tap-highlight-color:transparent;-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+img{display:block;max-width:100%}
+.serif,h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:-.028em;color:var(--green)}
+.shell{width:min(1180px,calc(100% - 40px));margin:0 auto}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.icon{width:18px;height:18px;display:inline-block;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-  /* ---------- Header ---------- */
-  .topbar{background:var(--beige);padding:7px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);overflow:visible;}
-  .logo{height:64px;width:auto;display:block;flex-shrink:0;}
-  @media(max-width:900px){.logo{height:58px;}}
-  @media(max-width:600px){.logo{height:48px;}.topbar{padding:7px 12px;}}
-  .topbar-right{display:flex;align-items:center;gap:16px;flex-shrink:0;}
-  .tagline{font-size:13px;font-weight:600;color:var(--green);opacity:0.72;text-align:right;line-height:1.35;}
-  @media(max-width:820px){.tagline{display:none;}}
-  .suggest-btn{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:var(--beige-hi);font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.3px;padding:11px 18px;border-radius:10px;text-decoration:none;white-space:nowrap;transition:background .15s,transform .15s;box-shadow:0 2px 8px rgba(4,59,38,0.18);}
-  .suggest-btn:hover{background:var(--green-soft);transform:translateY(-1px);}
-  .suggest-btn svg{width:15px;height:15px;stroke:var(--gold);stroke-width:2.5;}
-  @media(max-width:600px){.suggest-btn{padding:10px 14px;font-size:12px;}.suggest-btn .lbl-long{display:none;}}
+/* top navigation */
+.site-nav{position:sticky;top:0;z-index:70;background:rgba(248,244,239,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(4,59,38,.08)}
+.nav-inner{height:68px;display:flex;align-items:center;gap:26px}
+.brand{display:flex;align-items:center;text-decoration:none;flex:0 0 auto}.brand img{width:158px;height:auto}
+.nav-links{display:flex;align-items:center;gap:24px;margin-left:24px}.nav-links a,.nav-city{border:0;background:transparent;text-decoration:none;font-size:13px;cursor:pointer;padding:8px 0;color:#20322a}.nav-links a:hover{color:var(--green)}
+.nav-city{display:flex;align-items:center;gap:5px}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid transparent;background:transparent;display:grid;place-items:center;cursor:pointer;transition:.18s var(--ease)}
+.icon-btn:hover{background:white;border-color:var(--line)}
+.btn{border:0;border-radius:12px;padding:11px 16px;background:var(--green);color:#fff;font-weight:650;cursor:pointer;box-shadow:none;transition:transform .18s var(--ease),background .18s var(--ease),box-shadow .18s var(--ease);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{background:var(--green-2);box-shadow:var(--shadow-soft);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.secondary{background:#fff;color:var(--green);border:1px solid var(--line)}
+.mobile-menu-btn{display:none}
 
-  /* ---------- Filter bar ---------- */
-  .filters{background:var(--beige-hi);border-bottom:1px solid var(--line);padding:10px 22px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;}
-  @media(max-width:600px){.filters{padding:9px 14px;gap:7px;}}
-  .search{position:relative;flex:0 1 290px;min-width:170px;}
-  .search input{width:100%;font-family:'Inter',sans-serif;font-size:13px;padding:9px 13px 9px 34px;border-radius:9px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);}
-  .search input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
-  .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:#8A938E;}
-  .filters select{font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);cursor:pointer;transition:border-color .15s;max-width:150px;}
-  .filters select:hover{border-color:var(--green-soft);}
-  .filters select:focus{outline:2px solid var(--gold);outline-offset:1px;}
-  .filters select.on{border-color:var(--green);background:rgba(4,59,38,0.05);font-weight:600;}
-  .clear-btn{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--rust);background:none;border:none;cursor:pointer;padding:6px 8px;display:none;}
-  .clear-btn.show{display:inline;}
-  .spacer{flex:1;min-width:0;}
-  .count{font-size:12px;font-weight:700;color:var(--green);background:rgba(4,59,38,0.07);padding:6px 12px;border-radius:20px;white-space:nowrap;}
-  .toggle{display:flex;border:1.5px solid var(--green);border-radius:9px;overflow:hidden;}
-  .toggle button{font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;padding:8px 14px;background:var(--white);color:var(--green);border:none;cursor:pointer;transition:all .15s;}
-  .toggle button.active{background:var(--green);color:var(--beige-hi);}
+/* hero */
+.hero{padding:38px 0 30px;background:linear-gradient(180deg,#F7F0E9 0%,var(--paper) 100%)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(420px,1.08fr);align-items:stretch;gap:42px}
+.hero-copy{padding:18px 0 10px;align-self:center}
+.hero h1{font-size:clamp(46px,5vw,72px);line-height:.98;margin:0 0 18px;max-width:620px}
+.hero p{font-size:17px;color:#5e6863;max-width:500px;margin:0 0 22px}
+.hero-photo{position:relative;border-radius:3px;overflow:hidden;min-height:360px;background:#d9d3cb}.hero-photo img{width:100%;height:100%;object-fit:cover}.hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.2))}
+.hero-photo small{position:absolute;right:14px;bottom:12px;color:#fff;z-index:1;font-size:11px}
+.search-bar{display:flex;gap:8px;background:#fff;padding:6px;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-soft);max-width:520px}
+.search-bar .search-input-wrap{display:flex;align-items:center;gap:10px;flex:1;padding:0 9px}.search-bar input{width:100%;border:0;outline:0;background:transparent;height:44px}.search-bar .btn{padding:0 22px}
+.popular{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:13px;font-size:12px;color:var(--muted)}.popular button{border:0;background:transparent;padding:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer;color:#52635b}
 
-  /* ---------- Stage: split map + list ---------- */
-  .stage{display:flex;height:calc(100vh - 196px);overflow:hidden;}
-  @media(max-width:600px){.stage{height:calc(100vh - 214px);}}
-  #map{flex:1;height:100%;}
-  .listwrap{width:420px;max-width:42vw;height:100%;overflow-y:auto;background:var(--beige);border-left:1px solid var(--line);padding:16px;}
-  @media(max-width:900px){.listwrap{width:360px;}}
+/* common sections */
+.section{padding:38px 0}.section + .section{padding-top:22px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:17px}.section-head h2{font-size:30px;line-height:1;margin:0 0 6px}.section-head p{margin:0;color:var(--muted);font-size:14px}.text-link{border:0;background:transparent;color:var(--green);font-weight:650;font-size:13px;cursor:pointer;text-decoration:none;padding:7px 0}
 
-  /* view modes: map-only, list-only, split */
-  .stage.map-only .listwrap{display:none;}
-  .stage.list-only #map{display:none;}
-  .stage.list-only .listwrap{width:100%;max-width:100%;border-left:none;}
-  .stage.list-only{display:block;}
-  .stage.list-only .listwrap{max-width:1180px;margin:0 auto;}
-  @media(max-width:600px){
-    .stage .listwrap{width:100%;max-width:100%;border-left:none;}
-    .stage.split #map{display:none;}
-    .stage.split .listwrap{width:100%;max-width:100%;}
-  }
+/* curated collections */
+.collection-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.collection-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;min-height:278px;display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease)}
+.collection-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:rgba(4,59,38,.2)}
+.collection-image{height:116px;background:#ddd;overflow:hidden}.collection-image img{width:100%;height:100%;object-fit:cover;transition:transform .35s var(--ease)}.collection-card:hover .collection-image img{transform:scale(1.025)}
+.collection-body{padding:13px 14px 12px;display:flex;flex:1;flex-direction:column}.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-weight:750;font-size:9px;color:var(--green);margin-bottom:5px}.collection-card h3{font-size:19px;line-height:1.08;margin:0 0 7px}.collection-card p{font-size:12px;line-height:1.4;color:var(--muted);margin:0}.collection-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px;font-size:11px}.circle-arrow{width:24px;height:24px;border:1px solid var(--line-2);border-radius:50%;display:grid;place-items:center;color:var(--green)}
 
-  .list-grid{display:flex;flex-direction:column;gap:12px;}
-  .stage.list-only .list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1180px;margin:0 auto;}
+/* neighbourhoods */
+.neighborhood-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.hood-card{position:relative;min-height:88px;border:0;border-radius:12px;overflow:hidden;padding:13px;text-align:left;color:white;cursor:pointer;background:linear-gradient(135deg,#315b4a,#0e3928);transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+.hood-card:nth-child(2n){background:linear-gradient(135deg,#7c6c5a,#315b4a)}.hood-card:nth-child(3n){background:linear-gradient(135deg,#4c6f78,#143f30)}.hood-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.38))}.hood-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}.hood-card span{position:relative;z-index:1;display:block}.hood-name{font-family:Georgia,serif;font-size:18px}.hood-count{font-size:11px;opacity:.9;margin-top:2px}
 
-  /* ---------- Card ---------- */
-  .card{background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(3,43,27,.05);border:1px solid var(--line);cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,border-color .14s;}
-  .card:hover{transform:translateY(-1px);box-shadow:0 7px 22px rgba(3,43,27,.10);border-color:rgba(4,59,38,.24);}
-  .card.active{border-color:var(--gold);border-width:2px;}
-  .card-body{padding:15px 16px 16px;}
-  .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:9px;margin-bottom:2px;}
-  .card-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:17px;color:var(--green);line-height:1.2;}
-  .card-loc{font-size:12px;color:#6B7772;margin-bottom:11px;font-weight:500;}
-  .verified{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.55px;color:#6B5120;background:#FFF8E8;border:1px solid rgba(201,154,60,.55);padding:4px 8px;border-radius:20px;white-space:nowrap;}
-  .verified svg{width:9px;height:9px;stroke:var(--gold-dim)!important;}
-  .editor-note{background:#FBF7EF;border:1px solid rgba(201,154,60,.28);border-left:3px solid var(--gold);border-radius:8px;padding:9px 11px;margin-bottom:11px;}
-  .editor-note .etxt{font-size:12.5px;line-height:1.45;color:#5A4A24;font-style:italic;}
-  .editor-note .eby{font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gold-dim);margin-top:5px;}
-  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
-  .tag{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:rgba(4,59,38,0.06);color:var(--green-soft);}
-  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;border-top:1px solid var(--line);padding-top:11px;}
-  .stat{text-align:left;padding:0 7px;border-right:1px solid var(--line);}.stat:first-child{padding-left:0}.stat:last-child{border-right:0;padding-right:0}
-  .stat .lab{font-family:'Archivo',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#8A938E;margin-bottom:2px;}
-  .stat .val{font-size:12.5px;font-weight:700;color:var(--green);}
-  .stat .val.unk{color:#B7ADA0;font-weight:500;font-style:italic;}
-  .stat .val.good{color:var(--ok);}
-  .stat .val.bad{color:var(--rust);}
-  .card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:11px;gap:8px;}
-  .price{font-size:13px;font-weight:700;color:var(--green-soft);}
-  .fresh{font-size:10px;color:#9AA39E;font-weight:500;}
+/* directory */
+.directory-section{padding:38px 0 0;border-top:1px solid rgba(4,59,38,.06)}
+.directory-shell{width:min(1180px,calc(100% - 40px));margin:0 auto}
+.directory-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}.directory-head h2{font-size:30px;margin:0 8px 0 0;white-space:nowrap}.filter-control{height:42px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:0 35px 0 12px;min-width:126px;outline:none}.directory-actions{margin-left:auto;display:flex;gap:8px}.view-toggle{display:flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px}.view-toggle button{border:0;background:transparent;border-radius:7px;padding:7px 14px;font-size:12px;cursor:pointer}.view-toggle button.active{background:var(--green);color:white}.mobile-filter-btn{display:none}
+.directory-grid{height:min(650px,70vh);min-height:520px;display:grid;grid-template-columns:minmax(430px,.92fr) minmax(0,1.08fr);background:#fff;border:1px solid var(--line);border-radius:16px 16px 0 0;overflow:hidden}
+.cafe-list{min-width:0;overflow:auto;overscroll-behavior:contain;padding:6px 22px 24px;scrollbar-width:thin}.result-meta{font-size:12px;color:var(--muted);padding:12px 2px 8px;position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);z-index:4}
+.cafe-row{display:grid;grid-template-columns:94px minmax(0,1fr) 34px;gap:15px;padding:16px 0;border-bottom:1px solid var(--line);cursor:pointer;align-items:start;transition:opacity .15s var(--ease)}.cafe-row:hover .cafe-title{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px}.cafe-thumb{width:94px;height:94px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,var(--green-3),#d4e1d9);display:grid;place-items:center;color:var(--green);position:relative}.cafe-thumb img{width:100%;height:100%;object-fit:cover}.cafe-thumb-fallback{padding:8px;text-align:center;font:700 12px/1.2 Georgia,serif}.cafe-thumb-fallback small{display:block;font:500 9px/1.3 Inter,sans-serif;color:#547064;margin-top:4px}.cafe-title-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.cafe-title{font:600 20px/1.1 Georgia,serif;color:var(--green)}.verified-pill{display:inline-flex;align-items:center;gap:4px;border-radius:99px;background:#E4EFE7;color:var(--green);font-size:8px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 7px}.research-pill{display:inline-flex;align-items:center;border-radius:99px;background:#F1EFEB;color:#6B726E;font-size:8px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;padding:4px 7px}.verified-dot{width:12px;height:12px;border-radius:50%;background:var(--green);color:white;display:grid;place-items:center;font-size:8px}.cafe-area{color:var(--muted);font-size:11px;margin-top:3px}.cafe-summary{font-size:12.5px;color:#55625c;line-height:1.45;margin:7px 0 9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.signals{display:flex;gap:13px;align-items:center;flex-wrap:wrap;font-size:10.5px;color:#394b43}.signal{display:flex;align-items:center;gap:5px}.signal svg{width:14px;height:14px;color:var(--green)}.row-arrow{align-self:center;width:28px;height:28px;border:1px solid var(--line-2);border-radius:50%;display:grid;place-items:center;color:var(--green)}
+.directory-grid.map-mode{grid-template-columns:1fr}.directory-grid.map-mode .cafe-list{display:none}.directory-grid.map-mode .map-wrap{display:block}.map-wrap{position:relative;min-width:0;background:#e7ece9}.map-fallback{display:none;position:absolute;inset:0;z-index:5;background:#EEF2EF;align-items:center;justify-content:center;text-align:center;padding:28px;color:var(--muted)}.map-fallback.show{display:flex}.map-fallback strong{display:block;color:var(--green);font:600 18px Georgia,serif;margin-bottom:5px}.map{position:absolute;inset:0}.map-badge{position:absolute;top:14px;right:14px;z-index:4;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11px;box-shadow:var(--shadow-soft)}
+.cafe-marker{width:18px;height:18px;border-radius:50%;border:3px solid #fff;background:var(--green);box-shadow:0 2px 6px rgba(0,0,0,.25);cursor:pointer;transition:transform .15s var(--ease),background .15s var(--ease)}.cafe-marker:hover,.cafe-marker.active{transform:scale(1.22)}.cafe-marker.verified{background:var(--gold)}
+.maplibregl-popup-content{border-radius:12px;padding:12px 13px;box-shadow:var(--shadow);font:12px/1.4 Inter,sans-serif}.popup-name{font:600 16px/1.15 Georgia,serif;color:var(--green);margin-bottom:2px}.popup-meta{color:var(--muted)}
+.empty{padding:56px 10px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--green);font:600 18px Georgia,serif;margin-bottom:4px}
 
-  /* ---------- Detail drawer ---------- */
-  .drawer-bg{position:fixed;inset:0;background:rgba(3,43,27,0.4);opacity:0;pointer-events:none;transition:opacity .2s;z-index:200;}
-  .drawer-bg.open{opacity:1;pointer-events:auto;}
-  .drawer{position:fixed;top:0;right:0;height:100%;width:440px;max-width:92vw;background:var(--beige-hi);box-shadow:-8px 0 30px rgba(3,43,27,0.2);transform:translateX(100%);transition:transform .24s ease;z-index:201;overflow-y:auto;}
-  .drawer.open{transform:translateX(0);}
-  .drawer-head{background:var(--green);color:var(--beige-hi);padding:20px 22px;position:relative;}
-  .drawer-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:var(--beige-hi);width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
-  .drawer-close:hover{background:rgba(255,255,255,0.28);}
-  .drawer-name{font-family:'Archivo',sans-serif;font-weight:800;font-size:22px;line-height:1.15;margin-bottom:5px;padding-right:36px;}
-  .drawer-loc{font-size:13px;opacity:0.82;}
-  .drawer-verified{display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;background:#FFF8E8;color:#6B5120;padding:4px 9px;border-radius:20px;margin-top:10px;border:1px solid rgba(201,154,60,.5);}
-  .drawer-verified svg{width:10px;height:10px;stroke:var(--gold-dim)!important;}
-  .drawer-body{padding:20px 22px 30px;}
-  .drawer-section{margin-bottom:20px;}
-  .drawer-section h4{font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#8A938E;margin-bottom:9px;}
-  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-  .detail-cell{background:var(--white);border:1px solid var(--line);border-radius:9px;padding:10px 12px;}
-  .detail-cell .dl{font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#8A938E;margin-bottom:3px;}
-  .detail-cell .dv{font-size:14px;font-weight:600;color:var(--green);}
-  .detail-cell .dv.unk{color:#B7ADA0;font-style:italic;font-weight:400;font-size:13px;}
-  .detail-cell .dv.good{color:var(--ok);}
-  .detail-cell .dv.bad{color:var(--rust);}
-  .drawer .editor-note{margin-bottom:0;}
-  .drawer-tags{display:flex;flex-wrap:wrap;gap:6px;}
-  .drawer-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:var(--green);color:var(--beige-hi);font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:13px;border-radius:10px;text-decoration:none;transition:background .15s;margin-bottom:9px;}
-  .drawer-btn:hover{background:var(--green-soft);}
-  .drawer-btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);}
-  .drawer-btn.ghost:hover{background:rgba(4,59,38,0.06);}
-  .drawer-meta{font-size:11px;color:#9AA39E;text-align:center;margin-top:6px;line-height:1.5;}
+/* trust strip */
+.trust-strip{background:#EEF3ED;border-top:1px solid var(--line);padding:25px 0}.trust-grid{display:grid;grid-template-columns:repeat(3,1fr)}.trust-item{display:grid;grid-template-columns:38px 1fr;gap:12px;padding:3px 34px;border-right:1px solid var(--line)}.trust-item:first-child{padding-left:6px}.trust-item:last-child{border-right:0}.trust-icon{width:36px;height:36px;color:var(--green)}.trust-item strong{display:block;color:var(--green);margin-bottom:2px}.trust-item span{font-size:12px;color:var(--muted)}
+.site-footer{background:var(--green);color:#EAE5DE;padding:24px 0}.footer-inner{display:flex;align-items:center;gap:20px;font-size:12px}.footer-inner a{color:inherit;text-decoration:none}.footer-inner .footer-spacer{margin-left:auto;color:rgba(255,255,255,.62)}
 
-  /* ---------- MapLibre ---------- */
-  .maplibregl-popup-content{font-family:'Inter',sans-serif;min-width:205px;border-radius:12px!important;box-shadow:var(--shadow)!important;border:1px solid var(--line);padding:12px 14px!important;}
-  .maplibregl-popup-close-button{font-size:20px;color:#6B7772;padding:3px 7px;}
-  .maplibregl-popup-content .pop-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;color:var(--green);margin-bottom:2px;padding-right:15px;}
-  .maplibregl-popup-content .pop-loc{font-size:11.5px;color:#6B7772;margin-bottom:7px;}
-  .maplibregl-popup-content .pop-stats{font-size:12px;color:var(--ink);line-height:1.5;margin-bottom:8px;}
-  .maplibregl-popup-content .pop-btn{display:inline-block;font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#fff;background:var(--green);padding:7px 11px;border-radius:6px;cursor:pointer;}
-  .cafe-marker{width:18px;height:18px;border-radius:50%;border:3px solid #fff;background:var(--green);box-shadow:0 1px 5px rgba(3,43,27,.28);cursor:pointer;}
-  .cafe-marker.verified-marker{background:var(--gold);}
-  @media(min-width:901px){
-    /* On desktop the detail panel gets its own space. No dark modal overlay over the map. */
-    .drawer-bg{display:none!important;}
-    body.drawer-open .topbar,body.drawer-open .filters,body.drawer-open .stage,body.drawer-open .footer{margin-right:440px;}
-    .topbar,.filters,.stage,.footer{transition:margin-right .24s ease;}
-  }
+/* detail drawer */
+.drawer-backdrop{position:fixed;inset:0;background:rgba(10,19,15,.15);opacity:0;pointer-events:none;transition:opacity .22s var(--ease);z-index:79}.drawer-backdrop.show{opacity:1;pointer-events:auto}
+@media(min-width:1200px){.drawer-backdrop{display:none}.directory-shell{transition:padding-right .28s var(--ease)}body.drawer-open .directory-shell{padding-right:460px}.directory-grid{transition:grid-template-columns .28s var(--ease)}}
+.drawer{position:fixed;right:0;top:0;height:100dvh;width:min(460px,92vw);z-index:80;background:var(--paper);box-shadow:-24px 0 70px rgba(15,24,19,.17);transform:translateX(102%);transition:transform .32s var(--ease);display:flex;flex-direction:column}.drawer.open{transform:translateX(0)}
+.drawer-hero{height:180px;background:linear-gradient(135deg,#dce8e0,#c6d6cc);position:relative;overflow:hidden}.drawer-hero img{width:100%;height:100%;object-fit:cover}.drawer-hero-fallback{height:100%;display:grid;place-items:center;color:var(--green);font:600 22px Georgia,serif}.drawer-close{position:absolute;top:14px;left:14px;width:38px;height:38px;border:0;background:rgba(255,255,255,.92);border-radius:50%;display:grid;place-items:center;cursor:pointer;z-index:2}.drawer-body{padding:20px 24px 32px;overflow:auto;overscroll-behavior:contain}.drawer-title-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.drawer-title{font:600 30px/1.05 Georgia,serif;color:var(--green)}.drawer-area{font-size:12px;color:var(--muted);margin-top:5px}.drawer-signals{display:flex;gap:15px;flex-wrap:wrap;margin:15px 0 17px;padding-bottom:15px;border-bottom:1px solid var(--line)}.drawer-tabs{display:flex;gap:20px;border-bottom:1px solid var(--line);position:sticky;top:-20px;background:var(--paper);z-index:2;padding-top:2px}.drawer-tabs button{border:0;background:transparent;padding:12px 0 10px;color:var(--muted);font-size:11px;cursor:pointer;border-bottom:2px solid transparent}.drawer-tabs button.active{color:var(--green);border-bottom-color:var(--green);font-weight:700}.tab-panel{display:none;padding-top:18px}.tab-panel.active{display:block}.drawer-copy{color:#53615b;font-size:13px;line-height:1.65;white-space:pre-line}.editor-take{margin-top:17px;background:#EFF3EB;border-radius:12px;padding:15px;border:1px solid rgba(4,59,38,.06)}.editor-take strong{display:flex;align-items:center;gap:7px;color:var(--green);margin-bottom:7px}.work-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.work-cell{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px}.work-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#7d8983;font-weight:800}.work-value{margin-top:3px;font-weight:700;color:var(--green);font-size:14px}.info-list{display:grid;gap:0}.info-row{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12.5px}.info-row svg{color:var(--green)}.drawer-cta{display:flex;gap:8px;margin-top:18px}.drawer-cta .btn{flex:1;font-size:12px}.drawer-cta .btn.secondary{flex:0 0 auto}
 
-  .loading,.empty{text-align:center;padding:60px 24px;color:#6B7772;font-size:14px;}
-  .loading .dot{display:inline-block;animation:pulse 1.2s infinite;}
-  @keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+/* sheets */
+.sheet-backdrop{position:fixed;inset:0;background:rgba(12,20,16,.25);z-index:89;opacity:0;pointer-events:none;transition:opacity .2s var(--ease)}.sheet-backdrop.show{opacity:1;pointer-events:auto}.sheet{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--paper);border-radius:22px 22px 0 0;padding:12px 18px max(24px,env(safe-area-inset-bottom));transform:translateY(103%);transition:transform .28s var(--ease);box-shadow:0 -20px 60px rgba(0,0,0,.16)}.sheet.open{transform:translateY(0)}.sheet-handle{width:42px;height:4px;background:#C9CEC9;border-radius:99px;margin:2px auto 12px}.sheet-head{display:flex;align-items:center;justify-content:space-between}.sheet-head h3{font-size:24px;margin:0}.sheet-close{border:0;background:transparent;font-size:22px;cursor:pointer}.sheet-group{margin-top:18px}.sheet-group label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#78847e;margin-bottom:7px}.sheet select{width:100%;height:46px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 12px}.sheet .btn{width:100%;margin-top:18px}
+.mobile-menu{position:fixed;inset:0 0 0 auto;width:min(340px,86vw);z-index:95;background:var(--paper);transform:translateX(102%);transition:transform .28s var(--ease);padding:24px;box-shadow:-20px 0 60px rgba(0,0,0,.15)}.mobile-menu.open{transform:translateX(0)}.mobile-menu-top{display:flex;align-items:center;justify-content:space-between}.mobile-menu img{width:150px}.mobile-menu nav{display:grid;margin-top:30px}.mobile-menu nav button,.mobile-menu nav a{padding:15px 0;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;text-decoration:none;color:var(--green);font-weight:650;font-size:14px}
 
-  /* ---------- Status / resilience ---------- */
-  .status-banner{display:none;align-items:center;justify-content:space-between;gap:12px;background:#FFF8E8;color:#6B5120;border-bottom:1px solid rgba(201,154,60,.32);padding:9px 22px;font-size:12px;line-height:1.4;}
-  .status-banner.show{display:flex;}
-  .status-banner strong{font-family:'Archivo',sans-serif;color:var(--green);}
-  .status-banner button{border:0;background:transparent;color:var(--green);font:600 12px 'Inter',sans-serif;cursor:pointer;text-decoration:underline;text-decoration-color:var(--gold);}
-  @media(max-width:600px){.status-banner{padding:9px 14px;align-items:flex-start;}}
-  .map-fallback{height:100%;display:flex;align-items:center;justify-content:center;padding:30px;text-align:center;color:#6B7772;background:linear-gradient(180deg,var(--beige-hi),var(--beige));}
-  .map-fallback .big{font-family:'Archivo',sans-serif;color:var(--green);font-size:16px;font-weight:700;margin-bottom:6px;}
+.status-banner{display:none;background:#FFF6E4;color:#725B29;border-bottom:1px solid rgba(201,154,60,.3);padding:8px 14px;text-align:center;font-size:11px}.status-banner.show{display:block}
 
-  /* ---------- Footer ---------- */
-  .footer{background:var(--green);color:rgba(244,239,234,0.85);padding:11px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11.5px;line-height:1.5;}
-  .footer .fnotes{display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
-  .footer .fnote{display:inline-flex;align-items:center;gap:6px;}
-  .footer .fnote svg{width:13px;height:13px;stroke:var(--gold);flex-shrink:0;}
-  .footer .fright{display:flex;align-items:center;gap:14px;flex-shrink:0;}
-  .footer a.ig{display:inline-flex;align-items:center;gap:6px;color:var(--beige-hi);text-decoration:none;font-weight:600;}
-  .footer a.ig:hover{color:var(--gold);}
-  .footer a.ig svg{width:17px;height:17px;}
-  .footer .fcopy{color:rgba(244,239,234,0.55);}
-  @media(max-width:700px){.footer{padding:10px 16px;font-size:10.5px;gap:8px;}.footer .fnotes{gap:10px;}}
-  .empty .big{font-family:'Archivo',sans-serif;font-weight:700;font-size:16px;color:var(--green);margin-bottom:6px;}
-
-  /* ---------- Layout hardening ---------- */
-  body{display:flex;flex-direction:column;height:100dvh;min-height:100vh;}
-  .topbar,.filters,.status-banner,.footer{flex-shrink:0;}
-  .stage{height:auto!important;flex:1 1 auto;min-height:0;}
-  .listwrap{min-height:0;}
-  @media(max-width:600px){.stage{height:auto!important;}}
-
-  /* ---------- Mobile polish ---------- */
-  @media(max-width:600px){
-    #t-split{display:none;}
-    .filters{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:9px 12px;}
-    .search{grid-column:1 / -1;min-width:0;max-width:none;flex:none;}
-    .filters select{max-width:none;width:100%;min-width:0;}
-    #f-city{grid-column:1;}
-    #f-hood{grid-column:2;}
-    .clear-btn{grid-column:1;justify-self:start;padding-left:2px;}
-    .spacer{display:none;}
-    .count{grid-column:1;justify-self:start;align-self:center;}
-    .toggle{grid-column:2;justify-self:end;}
-    .toggle button{padding:8px 13px;}
-    .listwrap{padding:11px 10px 16px;}
-    .list-grid{gap:10px;}
-    .card-body{padding:14px;}
-    .card-name{font-size:16px;}
-    .verified{font-size:8px;padding:3px 7px;}
-    .editor-note{margin-top:2px;}
-    .footer .fnotes .fnote:first-child{display:none;}
-    .footer{padding:9px 12px;}
-    .drawer{top:auto;bottom:0;right:0;width:100%;max-width:none;height:min(88dvh,760px);border-radius:18px 18px 0 0;transform:translateY(102%);}
-    .drawer.open{transform:translateY(0);}
-    .drawer-head{padding:18px 18px 16px;border-radius:18px 18px 0 0;}
-    .drawer-body{padding:18px 16px 28px;}
-    .drawer-close{top:14px;right:14px;}
-  }
-
+@media(max-width:980px){
+  .shell,.directory-shell{width:min(100% - 28px,760px)}.nav-inner{height:62px}.nav-links,.nav-actions .search-nav,.nav-actions .map-nav{display:none}.mobile-menu-btn{display:grid;margin-left:auto}.brand img{width:145px}
+  .hero{padding:24px 0 25px}.hero-grid{grid-template-columns:1fr;gap:18px}.hero-copy{padding:2px 0}.hero h1{font-size:50px;max-width:580px}.hero-photo{min-height:280px;max-height:360px}.collection-grid{display:flex;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:6px;margin-right:-14px}.collection-card{min-width:220px;scroll-snap-align:start}.neighborhood-row{display:flex;overflow:auto;padding-bottom:4px;margin-right:-14px}.hood-card{min-width:145px}.directory-grid{grid-template-columns:1fr;height:620px;min-height:520px}.map-wrap{display:none}.directory-grid.map-mode .cafe-list{display:none}.directory-grid.map-mode .map-wrap{display:block}.directory-head h2{width:100%;margin-bottom:4px}.directory-actions{margin-left:0}.filter-control{display:none}.mobile-filter-btn{display:inline-flex}.trust-grid{grid-template-columns:1fr}.trust-item{border-right:0;border-bottom:1px solid var(--line);padding:14px 6px}.trust-item:last-child{border-bottom:0}.footer-inner{flex-wrap:wrap}.footer-inner .footer-spacer{margin-left:0;width:100%}
+  .drawer{top:auto;bottom:0;width:100%;height:min(88dvh,820px);border-radius:22px 22px 0 0;transform:translateY(103%)}.drawer.open{transform:translateY(0)}.drawer-hero{height:205px}.drawer-close{top:12px}.drawer-body{padding:18px 18px 30px}.drawer-tabs{top:-18px}.drawer-backdrop{background:rgba(10,19,15,.25)}
+}
+@media(max-width:620px){
+  .shell,.directory-shell{width:calc(100% - 24px)}.hero-grid{gap:0}.hero-copy{padding-top:6px}.hero h1{font-size:42px;line-height:1.01;margin-bottom:14px}.hero p{font-size:14px;line-height:1.5;margin-bottom:17px}.hero-photo{display:none}.search-bar{border-radius:12px;box-shadow:none}.search-bar .btn{display:none}.popular{gap:10px;margin-top:11px}.section{padding:30px 0}.section-head{align-items:flex-start}.section-head h2{font-size:27px}.section-head .text-link{display:none}.collection-card{min-width:205px;min-height:266px}.collection-image{height:110px}.neighborhood-row{gap:8px}.hood-card{min-width:138px;min-height:82px}.directory-section{padding-top:28px}.directory-head{gap:8px}.directory-head h2{font-size:27px}.directory-grid{height:auto;min-height:0;border-radius:14px 14px 0 0;display:block}.directory-grid .cafe-list{overflow:visible}.directory-grid .map-wrap{height:70dvh}.directory-grid.map-mode{height:70dvh}.cafe-list{padding:0 12px 18px}.result-meta{padding:11px 2px 6px}.cafe-row{grid-template-columns:76px minmax(0,1fr) 28px;gap:11px;padding:13px 0}.cafe-thumb{width:76px;height:76px}.cafe-title{font-size:17px}.cafe-summary{font-size:11.5px;margin:5px 0 7px;-webkit-line-clamp:2}.signals{gap:9px;font-size:9.5px}.signal:nth-child(3){display:none}.row-arrow{width:24px;height:24px}.map-badge{top:10px;right:10px}.trust-strip{padding:16px 0}.trust-item{grid-template-columns:32px 1fr}.trust-icon{width:30px;height:30px}.site-footer{padding:20px 0}.footer-inner{font-size:11px}.drawer-title{font-size:26px}.work-grid{grid-template-columns:1fr 1fr}.drawer-cta{position:sticky;bottom:-30px;background:linear-gradient(180deg,rgba(248,244,239,0),var(--paper) 25%);padding-top:22px;padding-bottom:max(2px,env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<div class="topbar">
-  <img class="logo" src="/assets/logo.png" alt="The Remote Cafe">
-  <div class="topbar-right">
-    <div class="tagline">Remote-work-friendly cafes<br>curated for getting work done</div>
-    <a class="suggest-btn" href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-      <span><span class="lbl-long">Suggest a </span>cafe</span>
-    </a>
+<header class="site-nav">
+  <div class="shell nav-inner">
+    <a class="brand" href="#top" aria-label="The Remote Cafe home"><img src="/assets/logo.png" alt="The Remote Cafe"></a>
+    <nav class="nav-links" aria-label="Primary">
+      <button class="nav-city" type="button" data-scroll="directory">Mumbai <svg class="icon" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></svg></button>
+      <a href="#directory">Cafés</a><a href="#neighbourhoods">Neighbourhoods</a><a href="#about">About</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn search-nav" id="nav-search" aria-label="Search"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+      <button class="btn map-nav" id="nav-map" type="button">View map</button>
+      <button class="icon-btn mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
-</div>
+</header>
+<div class="status-banner" id="status-banner">Fresh café data is temporarily unavailable. Showing the latest saved directory.</div>
+<main id="top">
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <h1>Find somewhere<br>actually good<br>to work from.</h1>
+        <p>A curated guide to remote-work-friendly cafés in Mumbai, with honest notes on WiFi, outlets, noise and the work environment.</p>
+        <form class="search-bar" id="hero-search-form">
+          <div class="search-input-wrap"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="hero-search" type="search" placeholder="Search cafés, areas or keywords" autocomplete="off"></div>
+          <button class="btn" type="submit">Search</button>
+        </form>
+        <div class="popular" id="popular-areas"><span>Popular:</span></div>
+      </div>
+      <div class="hero-photo"><img src="/assets/hero.jpg" alt="Laptop and coffee at a work-friendly cafe"><small>Illustrative TRC workspace</small></div>
+    </div>
+  </section>
 
-<div class="status-banner" id="status-banner"><div id="status-text"></div><button id="status-action" type="button">View list</button></div>
+  <section class="section" id="collections">
+    <div class="shell">
+      <div class="section-head"><div><h2>Curated picks</h2><p>Useful shortcuts for different kinds of workdays.</p></div><button class="text-link" data-scroll="directory">View all cafés →</button></div>
+      <div class="collection-grid" id="collection-grid"></div>
+    </div>
+  </section>
 
-<div class="filters">
-  <div class="search">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    <input type="text" id="f-search" placeholder="Search cafe or area…" autocomplete="off">
-  </div>
-  <select id="f-city"><option value="">All cities</option></select>
-  <select id="f-hood"><option value="">All areas</option></select>
-  <button class="clear-btn" id="clear">Clear all</button>
-  <div class="spacer"></div>
-  <span class="count" id="count">…</span>
-  <div class="toggle">
-    <button id="t-split" class="active">Split</button>
-    <button id="t-map">Map</button>
-    <button id="t-list">List</button>
-  </div>
-</div>
+  <section class="section" id="neighbourhoods">
+    <div class="shell">
+      <div class="section-head"><div><h2>Browse by neighbourhood</h2><p>Start with the part of town you actually want to be in.</p></div><button class="text-link" data-scroll="directory">View all areas →</button></div>
+      <div class="neighborhood-row" id="neighborhood-row"></div>
+    </div>
+  </section>
 
-<div class="stage split" id="stage">
-  <div id="map"></div>
-  <div class="listwrap">
-    <div class="list-grid" id="list"><div class="loading">Loading cafes<span class="dot">…</span></div></div>
-  </div>
-</div>
+  <section class="directory-section" id="directory">
+    <div class="directory-shell">
+      <div class="directory-head">
+        <h2>All cafés in Mumbai</h2>
+        <select id="filter-city" class="filter-control" aria-label="City"><option value="">All cities</option></select>
+        <select id="filter-hood" class="filter-control" aria-label="Neighbourhood"><option value="">All areas</option></select>
+        <select id="filter-style" class="filter-control" aria-label="Work style"><option value="">All work styles</option><option>Editor Verified</option><option>Full workday</option><option>Quiet focus</option><option>Good for calls</option><option>Open late</option></select>
+        <div class="directory-actions">
+          <button class="btn secondary mobile-filter-btn" id="filter-btn" type="button"><svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters</button>
+          <div class="view-toggle"><button class="active" id="view-list" type="button">List</button><button id="view-map" type="button">Map</button></div>
+        </div>
+      </div>
+      <div class="directory-grid" id="directory-grid">
+        <div class="cafe-list" id="cafe-list"><div class="result-meta">Loading cafés…</div></div>
+        <div class="map-wrap"><div class="map" id="map"></div><div class="map-fallback" id="map-fallback"><div><strong>Map unavailable</strong>The café list is still fully usable.</div></div><div class="map-badge">Tap a pin to preview</div></div>
+      </div>
+    </div>
+  </section>
 
-<div class="footer">
-  <div class="fnotes">
-    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Work conditions can vary by day and time</span>
-    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>Unconfirmed details are left unconfirmed, not guessed</span>
-  </div>
-  <div class="fright">
-    <a class="ig" href="https://www.instagram.com/theremotecafe?igsh=MWQ4eDVnZW5jaHJyOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" title="Follow us on Instagram">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-      Follow
-    </a>
-    <span class="fcopy">© 2026 The Remote Cafe</span>
-  </div>
-</div>
+  <section class="trust-strip" id="about">
+    <div class="shell trust-grid">
+      <div class="trust-item"><svg class="trust-icon icon" viewBox="0 0 24 24"><path d="M3 5h15v8a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6V5Z"/><path d="M18 8h2a2 2 0 0 1 0 4h-2M5 22h12"/></svg><div><strong>On-the-ground insights</strong><span>Editor Verified is earned through real-world checking, not assumed from listing data.</span></div></div>
+      <div class="trust-item"><svg class="trust-icon icon" viewBox="0 0 24 24"><path d="m12 2 2.7 2.3 3.5-.3.9 3.4 3 1.8-1.4 3.2 1.4 3.2-3 1.8-.9 3.4-3.5-.3L12 22l-2.7-2.3-3.5.3-.9-3.4-3-1.8 1.4-3.2-1.4-3.2 3-1.8.9-3.4 3.5.3L12 2Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg><div><strong>Focus on what matters</strong><span>WiFi, outlets, noise, seating tolerance and practical work conditions stay front and centre.</span></div></div>
+      <div class="trust-item"><svg class="trust-icon icon" viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><div><strong>A growing guide</strong><span>Currently focused on Mumbai, with the structure ready to expand city by city without clutter.</span></div></div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer"><div class="shell footer-inner"><a href="https://www.instagram.com/theremotecafe" target="_blank" rel="noopener">@theremotecafe</a><a href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">Suggest a café</a><span class="footer-spacer">Details can change. Unconfirmed information stays labelled as such.</span></div></footer>
 
-<div class="drawer-bg" id="drawer-bg"></div>
-<div class="drawer" id="drawer"></div>
+<div class="drawer-backdrop" id="drawer-backdrop"></div><aside class="drawer" id="drawer" aria-label="Cafe details" aria-hidden="true"></aside>
+<div class="sheet-backdrop" id="sheet-backdrop"></div>
+<section class="sheet" id="filter-sheet" aria-label="Filters"><div class="sheet-handle"></div><div class="sheet-head"><h3>Filters</h3><button class="sheet-close" id="filter-close" aria-label="Close">×</button></div><div class="sheet-group"><label>City</label><select id="m-city"></select></div><div class="sheet-group"><label>Area</label><select id="m-hood"></select></div><div class="sheet-group"><label>Work style</label><select id="m-style"><option value="">All work styles</option><option>Editor Verified</option><option>Full workday</option><option>Quiet focus</option><option>Good for calls</option><option>Open late</option></select></div><button class="btn" id="apply-mobile-filters">Apply filters</button></section>
+<div class="sheet-backdrop" id="menu-backdrop"></div><aside class="mobile-menu" id="mobile-menu"><div class="mobile-menu-top"><img src="/assets/logo.png" alt="The Remote Cafe"><button class="icon-btn" id="mobile-menu-close" aria-label="Close menu">×</button></div><nav><button data-scroll="directory">Cafés</button><button data-scroll="neighbourhoods">Neighbourhoods</button><button data-scroll="about">About</button><a href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">Suggest a café</a><a href="https://www.instagram.com/theremotecafe" target="_blank" rel="noopener">Instagram</a></nav></aside>
 
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 <script>
-/* Build-time snapshot. Fresh data is fetched privately through /api/cafes. */
-const INITIAL_RECORDS = [];
-
-let RECORDS=[], map=null, markers=[], markerById={}, activeId=null;
-
-async function fetchAll(){
-  try{
-    const r=await fetch('/api/cafes',{headers:{Accept:'application/json'}});
-    if(!r.ok)throw new Error('API '+r.status);
-    const d=await r.json();
-    return Array.isArray(d.records)?d.records:[];
-  }catch(e){
-    if(INITIAL_RECORDS.length){
-      showStatus('<strong>Using the latest saved cafe data.</strong> Live refresh is temporarily unavailable.');
-      return INITIAL_RECORDS;
-    }
-    showError('Could not load cafes right now. Please try again.');
-    return[];
-  }
+const INITIAL_RECORDS=[];
+const SITE_URL='https://the-remote-cafe-ind.vercel.app';
+const COLLECTIONS=[
+ {key:'Editor Verified',eyebrow:'Editor Verified',title:'Editor Verified',desc:'Our most trusted picks, checked by TRC.',img:'/assets/collection-verified.jpg'},
+ {key:'Full workday',eyebrow:'Full workday',title:'Best for a full workday',desc:'Places that can support a longer session.',img:'/assets/collection-workday.jpg'},
+ {key:'Quiet focus',eyebrow:'Quiet focus',title:'Quiet enough to focus',desc:'Lower-noise options for heads-down work.',img:'/assets/collection-quiet.jpg'},
+ {key:'Good for calls',eyebrow:'Good for calls',title:'Good for calls',desc:'Places where taking a call is more workable.',img:'/assets/collection-calls.jpg'},
+ {key:'Open late',eyebrow:'Late-night work',title:'Open late',desc:'Useful when the workday runs long.',img:'/assets/collection-late.jpg'}
+];
+let RECORDS=[],FILTER={city:'',hood:'',style:'',q:''},map=null,markers=[],markerById=new Map(),activeId=null,popup=null;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const val=v=>typeof v==='string'?v:(v&&v.name)||'';
+const arr=v=>Array.isArray(v)?v.map(x=>typeof x==='string'?x:(x&&x.name)||'').filter(Boolean):[];
+const clean=v=>{const x=val(v);return !x||x==='Unconfirmed'?'Not checked':x};
+const isMobile=()=>matchMedia('(max-width:980px)').matches;
+const debounce=(fn,delay=120)=>{let t;return(...args)=>{clearTimeout(t);t=setTimeout(()=>fn(...args),delay)}};
+function slugify(v=''){return String(v).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80)}
+function collectionMatch(r,key){const f=r.fields||{};return key==='Editor Verified'?!!f.editor_verified:arr(f.editorial_collections).includes(key)}
+function priority(r){const n=Number(r.fields?.homepage_priority);return Number.isFinite(n)&&n>0?n:9999}
+function summary(r){const f=r.fields||{};if(f.editor_review)return String(f.editor_review).replace(/\s+/g,' ').trim().slice(0,170);const bits=[];if(val(f.wifi_status)==='Good')bits.push('good WiFi');if(val(f.outlet_count)==='Plenty')bits.push('plenty of outlets');if(val(f.noise_level)==='Quiet')bits.push('a quieter setting');if(val(f.seating_duration)==='Unlimited')bits.push('longer stays');if(bits.length){const joined=bits.slice(0,3).join(', ');return f.editor_verified?joined.replace(/^./,c=>c.toUpperCase())+'.':'Available research points to '+joined+'.';}return 'Work-from details are listed where available, with unknowns left unconfirmed.'}
+function statusTone(v){const x=val(v);return ['Good','Plenty','Quiet','Yes','Unlimited'].includes(x)?'good':['No','Loud','<1hr'].includes(x)?'bad':'neutral'}
+function icon(type){const paths={wifi:'<path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01"/>',noise:'<path d="M11 5 6 9H3v6h3l5 4V5ZM15 9a5 5 0 0 1 0 6M18 6a9 9 0 0 1 0 12"/>',plug:'<path d="M8 3v5M16 3v5M6 8h12v3a6 6 0 0 1-6 6 6 6 0 0 1-6-6V8ZM12 17v4"/>',pin:'<path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',link:'<path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'};return `<svg class="icon" viewBox="0 0 24 24">${paths[type]||paths.info}</svg>`}
+async function fetchFresh(){try{const r=await fetch('/api/cafes',{headers:{Accept:'application/json'}});if(!r.ok)throw new Error();const d=await r.json();return Array.isArray(d.records)?d.records:[]}catch(e){return []}}
+function normalizedRecords(list){return list.filter(r=>r&&r.fields&&r.fields.name).sort((a,b)=>priority(a)-priority(b)||String(a.fields.name).localeCompare(String(b.fields.name)))}
+function liveCityRecords(){return RECORDS.filter(r=>!FILTER.city||val(r.fields.city)===FILTER.city)}
+function getFiltered(){const q=FILTER.q.trim().toLowerCase();return RECORDS.filter(r=>{const f=r.fields||{};if(FILTER.city&&val(f.city)!==FILTER.city)return false;if(FILTER.hood&&val(f.neighborhood)!==FILTER.hood)return false;if(FILTER.style&&!collectionMatch(r,FILTER.style))return false;if(q){const hay=[f.name,val(f.city),val(f.neighborhood),summary(r),...arr(f.tags),...arr(f.editorial_collections)].join(' ').toLowerCase();if(!hay.includes(q))return false}return true})}
+function renderCollections(){const root=$('#collection-grid');root.innerHTML=COLLECTIONS.map(c=>{const count=RECORDS.filter(r=>collectionMatch(r,c.key)).length;return `<button class="collection-card" data-collection="${esc(c.key)}"><div class="collection-image"><img src="${c.img}" alt=""></div><div class="collection-body"><div class="eyebrow">${esc(c.eyebrow)}</div><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p><div class="collection-foot"><span>${count} café${count===1?'':'s'}</span><span class="circle-arrow">→</span></div></div></button>`}).join('')}
+function renderNeighborhoods(){const counts=new Map();RECORDS.forEach(r=>{const h=val(r.fields.neighborhood);if(h)counts.set(h,(counts.get(h)||0)+1)});const items=[...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,8);$('#neighborhood-row').innerHTML=items.map(([h,n])=>`<button class="hood-card" data-hood="${esc(h)}"><span class="hood-name">${esc(h)}</span><span class="hood-count">${n} café${n===1?'':'s'}</span></button>`).join('');const popular=items.slice(0,5);$('#popular-areas').innerHTML='<span>Popular:</span>'+popular.map(([h])=>`<button type="button" data-hood="${esc(h)}">${esc(h)}</button>`).join('')}
+function fillSelects(){const cities=[...new Set(RECORDS.map(r=>val(r.fields.city)).filter(Boolean))].sort();const cityHtml='<option value="">All cities</option>'+cities.map(c=>`<option>${esc(c)}</option>`).join('');$('#filter-city').innerHTML=cityHtml;$('#m-city').innerHTML=cityHtml;fillHoods()}
+function fillHoods(){const source=RECORDS.filter(r=>!FILTER.city||val(r.fields.city)===FILTER.city);const hoods=[...new Set(source.map(r=>val(r.fields.neighborhood)).filter(Boolean))].sort();const html='<option value="">All areas</option>'+hoods.map(h=>`<option>${esc(h)}</option>`).join('');['#filter-hood','#m-hood'].forEach(id=>{$(id).innerHTML=html;$(id).value=FILTER.hood&&hoods.includes(FILTER.hood)?FILTER.hood:''});if(FILTER.hood&&!hoods.includes(FILTER.hood))FILTER.hood=''}
+function cafeThumb(r){const f=r.fields||{};if(f.image_url)return `<div class="cafe-thumb"><img loading="lazy" src="${esc(f.image_url)}" alt="${esc(f.name)}"></div>`;return `<div class="cafe-thumb"><div class="cafe-thumb-fallback">${esc(String(f.name).split(/\s+/).slice(0,2).join(' '))}<small>${esc(val(f.neighborhood)||val(f.city))}</small></div></div>`}
+function signal(type,label){return `<span class="signal">${icon(type)}<span>${esc(label)}</span></span>`}
+function renderList(){const rows=getFiltered();const list=$('#cafe-list');if(!rows.length){list.innerHTML='<div class="result-meta">0 cafés</div><div class="empty"><strong>No matches yet</strong>Try a different area, collection or search.</div>';updateMarkers(rows);return}list.innerHTML=`<div class="result-meta">${rows.length} café${rows.length===1?'':'s'}${FILTER.style?` · ${esc(FILTER.style)}`:''}</div>`+rows.map(r=>{const f=r.fields;return `<article class="cafe-row" data-id="${r.id}" tabindex="0">${cafeThumb(r)}<div><div class="cafe-title-line"><span class="cafe-title">${esc(f.name)}</span>${f.editor_verified?'<span class="verified-pill"><span class="verified-dot">✓</span>Editor Verified</span>':(val(f.source)?`<span class="research-pill">${val(f.source)==='Editor-scouted'?'Editor scouted':'Research based'}</span>`:'')}</div><div class="cafe-area">${esc([val(f.neighborhood),val(f.city)].filter(Boolean).join(', '))}</div><div class="cafe-summary">${esc(summary(r))}</div><div class="signals">${signal('wifi',clean(f.wifi_status))}${signal('noise',clean(f.noise_level))}${signal('plug',clean(f.outlet_count))}</div></div><span class="row-arrow">›</span></article>`}).join('');updateMarkers(rows)}
+function scrollDirectory(){document.querySelector('#directory').scrollIntoView({behavior:'smooth',block:'start'})}
+function setCollection(key){FILTER.style=key;FILTER.hood='';FILTER.q='';$('#hero-search').value='';syncFilters();renderList();scrollDirectory()}
+function setHood(h){FILTER.hood=h;FILTER.style='';FILTER.q='';$('#hero-search').value='';syncFilters();renderList();scrollDirectory()}
+function syncFilters(){$('#filter-city').value=FILTER.city;$('#filter-hood').value=FILTER.hood;$('#filter-style').value=FILTER.style;$('#m-city').value=FILTER.city;$('#m-hood').value=FILTER.hood;$('#m-style').value=FILTER.style}
+function mapFailure(){const f=$('#map-fallback');if(f)f.classList.add('show')}function makeMap(){if(map)return;if(!window.maplibregl){mapFailure();return}let loaded=false;map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/positron',center:[72.84,19.06],zoom:10.5,attributionControl:true});map.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');const timer=setTimeout(()=>{if(!loaded)mapFailure()},6500);map.on('load',()=>{loaded=true;clearTimeout(timer);$('#map-fallback')?.classList.remove('show');updateMarkers(getFiltered())});map.on('error',()=>{})}
+function updateMarkers(rows){if(!map)return;markers.forEach(m=>m.remove());markers=[];markerById.clear();const valid=rows.filter(r=>Number.isFinite(Number(r.fields.long))&&Number.isFinite(Number(r.fields.lat)));valid.forEach(r=>{const el=document.createElement('button');el.className='cafe-marker'+(r.fields.editor_verified?' verified':'');el.type='button';el.setAttribute('aria-label',r.fields.name);el.addEventListener('click',e=>{e.stopPropagation();previewMarker(r,el)});const m=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat([Number(r.fields.long),Number(r.fields.lat)]).addTo(map);markers.push(m);markerById.set(r.id,{m,el})});if(valid.length){const b=new maplibregl.LngLatBounds();valid.forEach(r=>b.extend([Number(r.fields.long),Number(r.fields.lat)]));map.fitBounds(b,{padding:isMobile()?42:58,maxZoom:13.2,duration:500})}}
+function previewMarker(r,el){$$('.cafe-marker.active').forEach(x=>x.classList.remove('active'));el.classList.add('active');if(popup)popup.remove();popup=new maplibregl.Popup({offset:14,closeButton:false,maxWidth:'260px'}).setLngLat([Number(r.fields.long),Number(r.fields.lat)]).setHTML(`<div class="popup-name">${esc(r.fields.name)}</div><div class="popup-meta">${esc(val(r.fields.neighborhood)||val(r.fields.city))}</div><button style="margin-top:8px;border:0;background:#043B26;color:white;border-radius:7px;padding:6px 9px;cursor:pointer" onclick="window.__openCafe('${r.id}')">View details</button>`).addTo(map)}
+function detailInfoRow(type,label,value,href){if(!value)return'';return `<div class="info-row">${icon(type)}<div><strong>${esc(label)}</strong><br>${href?`<a href="${esc(href)}" target="_blank" rel="noopener">${esc(value)}</a>`:esc(value)}</div></div>`}
+function openCafe(id){const r=RECORDS.find(x=>x.id===id);if(!r)return;activeId=id;const f=r.fields||{},slug=r.slug||slugify(`${f.name}-${val(f.neighborhood)||val(f.city)}`);const mapUrl=f.google_place_id?`https://www.google.com/maps/place/?q=place_id:${encodeURIComponent(f.google_place_id)}`:(f.address?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(f.address)}`:'');const photo=f.image_url?`<img src="${esc(f.image_url)}" alt="${esc(f.name)}">`:`<div class="drawer-hero-fallback">${esc(f.name)}</div>`;const fit=val(f.workday_fit);$('#drawer').innerHTML=`<div class="drawer-hero">${photo}<button class="drawer-close" id="drawer-close" aria-label="Close">←</button></div><div class="drawer-body"><div class="drawer-title-line"><div class="drawer-title">${esc(f.name)}</div>${f.editor_verified?'<span class="verified-pill"><span class="verified-dot">✓</span>Editor Verified</span>':(val(f.source)?`<span class="research-pill">${val(f.source)==='Editor-scouted'?'Editor scouted':'Research based'}</span>`:'')}</div><div class="drawer-area">${esc([val(f.neighborhood),val(f.city)].filter(Boolean).join(', '))}${fit&&fit!=='Unverified'?` · ${esc(fit)} workday fit`:''}</div><div class="drawer-signals">${signal('wifi',clean(f.wifi_status))}${signal('noise',clean(f.noise_level))}${signal('plug',clean(f.outlet_count))}</div><div class="drawer-tabs"><button class="active" data-tab="overview">Overview</button><button data-tab="work">Work details</button><button data-tab="info">Info</button></div><section class="tab-panel active" data-panel="overview"><div class="drawer-copy">${esc(summary(r))}</div>${f.editor_review?`<div class="editor-take"><strong>✓ Editor's Take</strong><div class="drawer-copy">${esc(f.editor_review)}</div></div>`:''}</section><section class="tab-panel" data-panel="work"><div class="work-grid"><div class="work-cell"><div class="work-label">WiFi</div><div class="work-value">${esc(clean(f.wifi_status))}</div></div><div class="work-cell"><div class="work-label">Power outlets</div><div class="work-value">${esc(clean(f.outlet_count))}</div></div><div class="work-cell"><div class="work-label">Noise</div><div class="work-value">${esc(clean(f.noise_level))}</div></div><div class="work-cell"><div class="work-label">Sit for</div><div class="work-value">${esc(clean(f.seating_duration))}</div></div><div class="work-cell"><div class="work-label">Laptop-friendly staff</div><div class="work-value">${esc(clean(f.laptop_friendly_staff))}</div></div><div class="work-cell"><div class="work-label">Price</div><div class="work-value">${esc(clean(f.price_tier))}</div></div></div></section><section class="tab-panel" data-panel="info"><div class="info-list">${detailInfoRow('pin','Address',f.address)}${detailInfoRow('clock','Hours',f.hours)}${detailInfoRow('info','Last confirmed',f.last_confirmed_date)}${detailInfoRow('link','Website',f.website,f.website)}</div></section><div class="drawer-cta">${mapUrl?`<a class="btn" href="${esc(mapUrl)}" target="_blank" rel="noopener">Open in Google Maps</a>`:''}<a class="btn secondary" href="/cafe/${esc(slug)}/" aria-label="Open cafe page">↗</a></div></div>`;$('#drawer').classList.add('open');$('#drawer').setAttribute('aria-hidden','false');$('#drawer-backdrop').classList.add('show');document.body.classList.add('drawer-open');if(isMobile())document.body.style.overflow='hidden';setTimeout(()=>map?.resize(),300);$('#drawer-close').onclick=closeCafe;$$('.drawer-tabs button').forEach(b=>b.onclick=()=>{$$('.drawer-tabs button').forEach(x=>x.classList.remove('active'));$$('.tab-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(`[data-panel="${b.dataset.tab}"]`).classList.add('active')});const mark=markerById.get(id);if(mark&&map){setTimeout(()=>{map.resize();map.easeTo({center:mark.m.getLngLat(),duration:450,offset:isMobile()?[0,-70]:[-120,0]})},80)}}
+function closeCafe(){activeId=null;$('#drawer').classList.remove('open');$('#drawer').setAttribute('aria-hidden','true');$('#drawer-backdrop').classList.remove('show');document.body.classList.remove('drawer-open');document.body.style.overflow='';setTimeout(()=>map?.resize(),300);$$('.cafe-marker.active').forEach(x=>x.classList.remove('active'))}
+window.__openCafe=openCafe;
+function setView(mode){const grid=$('#directory-grid'),list=$('#view-list'),mapBtn=$('#view-map');if(mode==='map'){grid.classList.add('map-mode');mapBtn.classList.add('active');list.classList.remove('active');makeMap();setTimeout(()=>{map?.resize();updateMarkers(getFiltered())},70)}else{grid.classList.remove('map-mode');list.classList.add('active');mapBtn.classList.remove('active')}}
+function openFilterSheet(){syncFilters();$('#sheet-backdrop').classList.add('show');$('#filter-sheet').classList.add('open');document.body.style.overflow='hidden'}
+function closeFilterSheet(){ $('#sheet-backdrop').classList.remove('show');$('#filter-sheet').classList.remove('open');document.body.style.overflow=''}
+function openMenu(){ $('#menu-backdrop').classList.add('show');$('#mobile-menu').classList.add('open');document.body.style.overflow='hidden'}
+function closeMenu(){ $('#menu-backdrop').classList.remove('show');$('#mobile-menu').classList.remove('open');document.body.style.overflow=''}
+function bind(){
+  document.addEventListener('click',e=>{const c=e.target.closest('[data-collection]');if(c)setCollection(c.dataset.collection);const h=e.target.closest('[data-hood]');if(h)setHood(h.dataset.hood);const sc=e.target.closest('[data-scroll]');if(sc){closeMenu();document.getElementById(sc.dataset.scroll)?.scrollIntoView({behavior:'smooth'})}const row=e.target.closest('.cafe-row');if(row)openCafe(row.dataset.id)});
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'){const row=e.target.closest('.cafe-row');if(row)openCafe(row.dataset.id)}if(e.key==='Escape'){closeCafe();closeFilterSheet();closeMenu()}});
+  $('#drawer-backdrop').onclick=closeCafe;$('#sheet-backdrop').onclick=closeFilterSheet;$('#menu-backdrop').onclick=closeMenu;$('#filter-btn').onclick=openFilterSheet;$('#filter-close').onclick=closeFilterSheet;$('#mobile-menu-btn').onclick=openMenu;$('#mobile-menu-close').onclick=closeMenu;
+  $('#filter-city').onchange=e=>{FILTER.city=e.target.value;FILTER.hood='';fillHoods();syncFilters();renderList()};$('#filter-hood').onchange=e=>{FILTER.hood=e.target.value;syncFilters();renderList()};$('#filter-style').onchange=e=>{FILTER.style=e.target.value;syncFilters();renderList()};
+  $('#m-city').onchange=e=>{FILTER.city=e.target.value;FILTER.hood='';fillHoods();syncFilters()};$('#m-hood').onchange=e=>FILTER.hood=e.target.value;$('#m-style').onchange=e=>FILTER.style=e.target.value;$('#apply-mobile-filters').onclick=()=>{syncFilters();renderList();closeFilterSheet()};
+  $('#view-list').onclick=()=>setView('list');$('#view-map').onclick=()=>setView('map');$('#nav-map').onclick=()=>{scrollDirectory();if(isMobile())setView('map')};$('#nav-search').onclick=()=>{$('#hero-search').focus();window.scrollTo({top:0,behavior:'smooth'})};
+  $('#hero-search-form').onsubmit=e=>{e.preventDefault();FILTER.q=$('#hero-search').value;renderList();scrollDirectory()};$('#hero-search').addEventListener('input',debounce(e=>{FILTER.q=e.target.value;if(FILTER.q.length>=2||!FILTER.q)renderList()},180));
+  window.addEventListener('resize',debounce(()=>{if(!isMobile()){$('#directory-grid').classList.remove('map-mode');$('#view-list').classList.add('active');$('#view-map').classList.remove('active');makeMap()}setTimeout(()=>map?.resize(),60)},120));
 }
-function showStatus(msg,actionLabel='View list'){
-  const b=document.getElementById('status-banner'),t=document.getElementById('status-text'),a=document.getElementById('status-action');
-  if(!b||!t)return;
-  t.innerHTML=msg;
-  if(a){a.textContent=actionLabel;a.style.display='inline';}
-  b.classList.add('show');
-}
-function hideStatus(){const b=document.getElementById('status-banner');if(b)b.classList.remove('show');}
-function showError(msg){
-  document.getElementById('list').innerHTML='<div class="empty"><div class="big">Couldn\'t load cafes</div><div>'+esc(msg)+'</div><div style="margin-top:12px"><button class="drawer-btn" style="max-width:180px;margin:0 auto;border:0;cursor:pointer" onclick="location.reload()">Try again</button></div></div>';
-  document.getElementById('count').textContent='Unavailable';
-  showStatus('<strong>We couldn\'t load the cafe list.</strong> Please try again.','Retry');
-  const a=document.getElementById('status-action');if(a)a.onclick=()=>location.reload();
-}
-
-const v=id=>document.getElementById(id).value;
-function updateAreas(){
-  const hs=document.getElementById('f-hood'),city=v('f-city'),current=hs.value;
-  const hoods=new Set();
-  RECORDS.forEach(r=>{
-    const f=r.fields||{};
-    if(f.status!=='Live'||!f.name)return;
-    if(city&&f.city!==city)return;
-    if(f.neighborhood)hoods.add(f.neighborhood);
-  });
-  hs.innerHTML='<option value="">All areas</option>';
-  [...hoods].sort().forEach(h=>hs.add(new Option(h,h)));
-  if([...hoods].includes(current))hs.value=current;
-}
-function fillDropdowns(recs){
-  const cs=document.getElementById('f-city');
-  cs.innerHTML='<option value="">All cities</option>';
-  const cities=new Set();
-  recs.forEach(r=>{if(r.fields?.status==='Live'&&r.fields?.city)cities.add(r.fields.city);});
-  [...cities].sort().forEach(c=>cs.add(new Option(c,c)));
-  updateAreas();
-}
-
-function filtered(){
-  const q=v('f-search').trim().toLowerCase(),city=v('f-city'),hood=v('f-hood');
-  return RECORDS.filter(r=>{
-    const f=r.fields;
-    if(f.status!=='Live')return false;          // only Live rows ever show (also skips blank rows)
-    if(!f.name)return false;                     // extra guard against empty rows
-    if(city&&f.city!==city)return false;
-    if(hood&&f.neighborhood!==hood)return false;
-    if(q){
-      const hay=((f.name||'')+' '+(f.neighborhood||'')+' '+(f.city||'')+' '+(f.address||'')).toLowerCase();
-      if(!hay.includes(q))return false;
-    }
-    return true;
-  });
-}
-
-const GOOD=['Excellent','Good','Plenty','Quiet','Unlimited','Yes'],BAD=['None','No','Loud','Hostile','<1hr'];
-function valClass(val){if(!val||val==='Unconfirmed')return'unk';if(GOOD.includes(val))return'good';if(BAD.includes(val))return'bad';return'';}
-function statCell(label,val){
-  if(!val||val==='Unconfirmed')return'<div class="stat"><div class="lab">'+label+'</div><div class="val unk">Not checked</div></div>';
-  return'<div class="stat"><div class="lab">'+label+'</div><div class="val '+valClass(val)+'">'+esc(val)+'</div></div>';
-}
-
-function cardHTML(r){
-  const f=r.fields,badge=!!f.editor_verified,hasTake=!!f.editor_review;
-  return '<div class="card'+(r.id===activeId?' active':'')+'" data-id="'+r.id+'"><div class="card-body">'
-    +'<div class="card-head"><div class="card-name">'+esc(f.name||'Unnamed')+'</div>'
-    +(badge?'<span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="#A67D2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</span>':'')+'</div>'
-    +'<div class="card-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
-    +(hasTake?'<div class="editor-note"><div class="etxt">'+esc(clip(f.editor_review,150))+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div>':'')
-    +'<div class="tags">'+(f.tags||[]).slice(0,4).map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>'
-    +'<div class="stats">'+statCell('Wifi',f.wifi_status)+statCell('Outlets',f.outlet_count)+statCell('Noise',f.noise_level)+'</div>'
-    +'<div class="card-foot">'
-    +(f.price_tier?'<span class="price">'+esc(f.price_tier)+'</span>':'<span></span>')
-    +(f.last_confirmed_date?'<span class="fresh">Checked '+fmtDate(f.last_confirmed_date)+'</span>':'')
-    +'</div></div></div>';
-}
-
-function renderList(recs){
-  const el=document.getElementById('list');
-  if(!recs.length){el.innerHTML='<div class="empty"><div class="big">No cafes found</div>Try another area or clear your filters.</div>';return;}
-  el.innerHTML=recs.map(cardHTML).join('');
-  el.querySelectorAll('.card').forEach(c=>{
-    c.addEventListener('click',e=>{ openDrawer(c.dataset.id); });
-  });
-}
-
-function clearMapMarkers(){
-  markers.forEach(m=>{try{m.remove();}catch(e){}});
-  markers=[];markerById={};
-}
-
-function markerPopupHTML(r){
-  const f=r.fields;
-  return '<div class="pop-name">'+esc(f.name||'Unnamed')+'</div>'
-    +'<div class="pop-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
-    +'<div class="pop-stats">Wifi: <b>'+(f.wifi_status&&f.wifi_status!=='Unconfirmed'?esc(f.wifi_status):'—')+'</b> · Noise: <b>'+(f.noise_level&&f.noise_level!=='Unconfirmed'?esc(f.noise_level):'—')+'</b></div>'
-    +'<span class="pop-btn" onclick="openDrawer(\''+r.id+'\')">View details</span>';
-}
-
-function renderMap(recs){
-  if(!map)return;
-  clearMapMarkers();
-  const bounds=new maplibregl.LngLatBounds();
-  let pointCount=0;
-  recs.forEach(r=>{
-    const f=r.fields;
-    const lat=Number(f.lat),lng=Number(f.long);
-    if(!Number.isFinite(lat)||!Number.isFinite(lng))return;
-    // Mumbai/India coordinates are stored as latitude + longitude in Airtable.
-    // MapLibre always receives [longitude, latitude].
-    const el=document.createElement('div');
-    el.className='cafe-marker'+(f.editor_verified?' verified-marker':'');
-    el.setAttribute('aria-label',f.name||'Cafe');
-    const popup=new maplibregl.Popup({offset:14,maxWidth:'260px'}).setHTML(markerPopupHTML(r));
-    const marker=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat([lng,lat]).setPopup(popup).addTo(map);
-    el.addEventListener('click',()=>setActive(r.id,false));
-    markerById[r.id]=marker;markers.push(marker);bounds.extend([lng,lat]);pointCount++;
-  });
-  if(pointCount){
-    map.fitBounds(bounds,{padding:{top:55,bottom:55,left:55,right:document.body.classList.contains('drawer-open')?495:55},maxZoom:14.5,duration:0});
-  }
-}
-
-function setActive(id,pan){
-  activeId=id;
-  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('active',c.dataset.id===id));
-  const c=document.querySelector('.card.active');if(c)c.scrollIntoView({behavior:'smooth',block:'nearest'});
-  if(pan&&map&&markerById[id]){
-    const marker=markerById[id],ll=marker.getLngLat();
-    const desktop=window.innerWidth>900;
-    map.easeTo({center:ll,zoom:Math.max(map.getZoom(),13),padding:desktop?{top:30,bottom:30,left:30,right:470}:{top:30,bottom:30,left:30,right:30},duration:350});
-    marker.togglePopup();
-  }
-}
-
-function openDrawer(id){
-  const r=RECORDS.find(x=>x.id===id);if(!r)return;
-  const f=r.fields,badge=!!f.editor_verified,hasTake=!!f.editor_review;
-  setActive(id,false);
-  const dc=(label,val)=>'<div class="detail-cell"><div class="dl">'+label+'</div><div class="dv '+valClass(val)+'">'+((!val||val==='Unconfirmed')?'Not yet confirmed':esc(val))+'</div></div>';
-  const gmaps=f.google_place_id?'https://www.google.com/maps/place/?q=place_id:'+f.google_place_id:(f.lat?'https://www.google.com/maps/search/?api=1&query='+f.lat+','+f.long:'');
-  document.getElementById('drawer').innerHTML=
-    '<div class="drawer-head"><button class="drawer-close" onclick="closeDrawer()">×</button>'
-    +'<div class="drawer-name">'+esc(f.name||'Unnamed')+'</div>'
-    +'<div class="drawer-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
-    +(badge?'<div class="drawer-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#A67D2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</div>':'')
-    +'</div><div class="drawer-body">'
-    +(hasTake?'<div class="drawer-section"><h4>Editor\'s Take</h4><div class="editor-note"><div class="etxt">'+esc(f.editor_review)+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div></div>':'')
-    +'<div class="drawer-section"><h4>Work-from stats</h4><div class="detail-grid">'
-    +dc('Wifi',f.wifi_status)+dc('Outlets',f.outlet_count)+dc('Noise',f.noise_level)+dc('Sit for',f.seating_duration)+dc('AC',f.ac===true?'Yes':(f.ac===false?'No':f.ac))+dc('Laptop-friendly',f.laptop_friendly_staff)
-    +'</div></div>'
-    +'<div class="drawer-section"><h4>Good to know</h4><div class="detail-grid">'
-    +dc('Price',f.price_tier)+dc('Hours',f.hours)
-    +'</div></div>'
-    +((f.tags&&f.tags.length)?'<div class="drawer-section"><h4>Features</h4><div class="drawer-tags">'+f.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div></div>':'')
-    +'<div class="drawer-section">'
-    +(r.slug?'<a class="drawer-btn ghost" href="/cafe/'+encodeURIComponent(r.slug)+'/">Full cafe details</a>':'')
-    +(gmaps?'<a class="drawer-btn" href="'+gmaps+'" target="_blank" rel="noopener">Open in Google Maps</a>':'')
-    +(f.website?'<a class="drawer-btn ghost" href="'+esc(f.website)+'" target="_blank" rel="noopener">Visit site</a>':'')
-    +(f.last_confirmed_date?'<div class="drawer-meta">Data last checked '+fmtDate(f.last_confirmed_date)+'</div>':'')
-    +'</div>'
-    +'</div>';
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('drawer-bg').classList.add('open');
-  if(window.innerWidth>900){
-    document.body.classList.add('drawer-open');
-    setTimeout(()=>{if(map){map.resize();setActive(id,true);}},270);
-  }
-}
-function closeDrawer(){
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('drawer-bg').classList.remove('open');
-  document.body.classList.remove('drawer-open');
-  if(map)setTimeout(()=>{map.resize();},260);
-}
-
-function refresh(){
-  const recs=filtered();
-  document.getElementById('count').textContent=recs.length+' spot'+(recs.length===1?'':'s');
-  renderList(recs);renderMap(recs);
-  ['f-city','f-hood'].forEach(id=>{const el=document.getElementById(id);el.classList.toggle('on',!!el.value);});
-  const anyFilter=v('f-search')||v('f-city')||v('f-hood');
-  document.getElementById('clear').classList.toggle('show',!!anyFilter);
-}
-
-function setView(view){
-  if((view==='map'||view==='split')&&!map){
-    showStatus('<strong>Map is temporarily unavailable.</strong> The cafe list still works normally.');
-    view='list';
-  }
-  const s=document.getElementById('stage');
-  s.className='stage '+(view==='split'?'split':view==='map'?'map-only':'list-only');
-  document.getElementById('t-split').classList.toggle('active',view==='split');
-  document.getElementById('t-map').classList.toggle('active',view==='map');
-  document.getElementById('t-list').classList.toggle('active',view==='list');
-  if(view!=='list'&&map)setTimeout(()=>{map.resize();},140);
-}
-
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const clip=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n).trim()+'…':s;};
-const fmtDate=d=>{try{return new Date(d).toLocaleDateString('en-IN',{month:'short',year:'numeric'});}catch(e){return d;}};
-
-document.getElementById('t-split').onclick=()=>setView('split');
-document.getElementById('t-map').onclick=()=>setView('map');
-document.getElementById('t-list').onclick=()=>setView('list');
-document.getElementById('f-city').onchange=()=>{updateAreas();refresh();};
-document.getElementById('f-hood').onchange=refresh;
-document.getElementById('f-search').addEventListener('input',refresh);
-document.getElementById('clear').onclick=()=>{['f-search','f-city','f-hood'].forEach(id=>document.getElementById(id).value='');refresh();};
-document.getElementById('drawer-bg').onclick=closeDrawer;
-document.getElementById('status-action').onclick=()=>setView('list');
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
-
-(async function init(){
-  // Mobile visitors, especially from Instagram, start with the reliable list view.
-  if(window.matchMedia('(max-width: 600px)').matches)setView('list');
-
-  try{
-    if(typeof maplibregl!=='undefined'){
-      map=new maplibregl.Map({
-        container:'map',
-        style:'https://tiles.openfreemap.org/styles/positron',
-        center:[72.83,19.06],
-        zoom:11.2,
-        minZoom:3,
-        attributionControl:true
-      });
-      map.addControl(new maplibregl.NavigationControl({showCompass:false}),'top-left');
-      let mapReady=false;
-      map.once('load',()=>{mapReady=true;if(RECORDS.length)renderMap(filtered());});
-      map.on('error',e=>console.warn('MapLibre:',e&&e.error?e.error:e));
-      setTimeout(()=>{
-        if(!mapReady){
-          showStatus('<strong>Map is taking longer than expected.</strong> You can still browse every cafe in List view.');
-          if(window.innerWidth<=900)setView('list');
-        }
-      },12000);
-    }else{
-      throw new Error('Map library unavailable');
-    }
-  }catch(e){
-    map=null;markers=[];
-    const m=document.getElementById('map');
-    if(m)m.innerHTML='<div class="map-fallback"><div><div class="big">Map unavailable</div><div>Browse the cafe list while we reconnect the map.</div></div></div>';
-    showStatus('<strong>Map is temporarily unavailable.</strong> The cafe list still works normally.');
-    setView('list');
-  }
-
-  if(INITIAL_RECORDS.length){
-    RECORDS=INITIAL_RECORDS;
-    fillDropdowns(RECORDS);
-    refresh();
-  }
-  const fresh=await fetchAll();
-  if(fresh.length){
-    RECORDS=fresh;
-    fillDropdowns(RECORDS);
-    refresh();
-  }else if(!RECORDS.length){
-    showError('Could not load cafes right now. Please try again.');
-  }
-})();;
+async function init(){RECORDS=normalizedRecords(INITIAL_RECORDS||[]);renderCollections();renderNeighborhoods();fillSelects();renderList();bind();if(!isMobile())makeMap();const fresh=await fetchFresh();if(fresh.length){RECORDS=normalizedRecords(fresh);renderCollections();renderNeighborhoods();fillSelects();syncFilters();renderList()}else if(!RECORDS.length){$('#status-banner').classList.add('show')}}
+init();
 </script>
 </body>
 </html>

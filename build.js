@@ -9,7 +9,8 @@ const DIST = path.join(process.cwd(),'dist');
 const PUBLIC_FIELDS = [
   'status','name','city','neighborhood','address','lat','long','editor_verified','editor_review',
   'editor_verified_date','tags','wifi_status','outlet_count','noise_level','price_tier',
-  'last_confirmed_date','seating_duration','ac','laptop_friendly_staff','hours','google_place_id','website'
+  'last_confirmed_date','seating_duration','ac','laptop_friendly_staff','hours','google_place_id','website',
+  'editorial_collections','workday_fit','homepage_priority','image_url','source','website_type'
 ];
 function publicRecord(r){
   const fields={};
@@ -50,7 +51,7 @@ return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="v
 
 const records=await fetchRecords();
 fs.rmSync(DIST,{recursive:true,force:true});fs.mkdirSync(path.join(DIST,'assets'),{recursive:true});
-fs.copyFileSync('assets/logo.png',path.join(DIST,'assets/logo.png'));fs.copyFileSync('assets/favicon.png',path.join(DIST,'assets/favicon.png'));
+for (const file of fs.readdirSync('assets')) { const src=path.join('assets',file), dst=path.join(DIST,'assets',file); if (fs.statSync(src).isFile()) fs.copyFileSync(src,dst); }
 let template=fs.readFileSync('index.template.html','utf8');
 const safeJson=JSON.stringify(records).replace(/</g,'\\u003c');
 template=template.replace('__INITIAL_RECORDS_JSON__',safeJson).replaceAll('__SITE_URL__',SITE_URL);
@@ -78,6 +79,23 @@ for(const [city,hoods] of cities){
     dir=path.join(DIST,citySlug,hoodSlug);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,'index.html'),shell({title:`Cafes to work from in ${hood}, ${city} | The Remote Cafe`,description:`Remote-work-friendly cafes in ${hood}, ${city}, with WiFi, outlet and noise details where confirmed.`,canonical:can,body}));
   }
 }
+
+const collectionDefs = [
+  ['editor-verified','Editor Verified', r => !!r.fields.editor_verified],
+  ['full-workday','Full workday', r => Array.isArray(r.fields.editorial_collections) && r.fields.editorial_collections.includes('Full workday')],
+  ['quiet-focus','Quiet focus', r => Array.isArray(r.fields.editorial_collections) && r.fields.editorial_collections.includes('Quiet focus')],
+  ['good-for-calls','Good for calls', r => Array.isArray(r.fields.editorial_collections) && r.fields.editorial_collections.includes('Good for calls')],
+  ['open-late','Open late', r => Array.isArray(r.fields.editorial_collections) && r.fields.editorial_collections.includes('Open late')]
+];
+for (const [slug,label,test] of collectionDefs) {
+  const recs=records.filter(test);
+  if(!recs.length) continue;
+  const canonical=`${SITE_URL}/collections/${slug}/`; urls.push(canonical);
+  const cards=recs.map(r=>`<div class="card"><a href="/cafe/${r.slug}/"><b>${esc(r.fields.name)}</b></a><div class="muted">${esc(r.fields.neighborhood||r.fields.city||'')}</div></div>`).join('');
+  const body=`<div class="crumbs"><a href="/">Directory</a> / ${esc(label)}</div><div class="hero"><h1>${esc(label)}</h1><p>A TRC-curated collection. Editor Verified remains a separate trust signal and is shown only where earned.</p></div><div class="cards">${cards}</div><a class="back" href="/">← Back to the directory</a>`;
+  const dir=path.join(DIST,'collections',slug); fs.mkdirSync(dir,{recursive:true}); fs.writeFileSync(path.join(dir,'index.html'),shell({title:`${label} cafes | The Remote Cafe`,description:`Browse ${label.toLowerCase()} cafes in The Remote Cafe directory.`,canonical,body}));
+}
+
 const sitemap=`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(u=>`<url><loc>${u}</loc></url>`).join('')}</urlset>`;
 fs.writeFileSync(path.join(DIST,'sitemap.xml'),sitemap);fs.writeFileSync(path.join(DIST,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 console.log(`Built ${records.length} cafes, ${urls.length} crawlable URLs.`);
