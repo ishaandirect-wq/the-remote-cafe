@@ -22,10 +22,10 @@
   body{font-family:'Inter',sans-serif;background:var(--beige);color:var(--ink);-webkit-font-smoothing:antialiased;overflow:hidden;}
 
   /* ---------- Header ---------- */
-  .topbar{background:var(--beige);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);overflow:visible;}
-  .logo{height:78px;width:auto;display:block;flex-shrink:0;}
-  @media(max-width:900px){.logo{height:66px;}}
-  @media(max-width:600px){.logo{height:52px;}.topbar{padding:8px 14px;}}
+  .topbar{background:var(--beige);padding:7px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);overflow:visible;}
+  .logo{height:64px;width:auto;display:block;flex-shrink:0;}
+  @media(max-width:900px){.logo{height:58px;}}
+  @media(max-width:600px){.logo{height:48px;}.topbar{padding:7px 12px;}}
   .topbar-right{display:flex;align-items:center;gap:16px;flex-shrink:0;}
   .tagline{font-size:13px;font-weight:600;color:var(--green);opacity:0.72;text-align:right;line-height:1.35;}
   @media(max-width:820px){.tagline{display:none;}}
@@ -37,7 +37,7 @@
   /* ---------- Filter bar ---------- */
   .filters{background:var(--beige-hi);border-bottom:1px solid var(--line);padding:10px 22px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;}
   @media(max-width:600px){.filters{padding:9px 14px;gap:7px;}}
-  .search{position:relative;flex:0 1 240px;min-width:150px;}
+  .search{position:relative;flex:0 1 290px;min-width:170px;}
   .search input{width:100%;font-family:'Inter',sans-serif;font-size:13px;padding:9px 13px 9px 34px;border-radius:9px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);}
   .search input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
   .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:#8A938E;}
@@ -76,22 +76,22 @@
   .stage.list-only .list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1180px;margin:0 auto;}
 
   /* ---------- Card ---------- */
-  .card{background:var(--white);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,border-color .14s;}
-  .card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(3,43,27,0.11),0 14px 34px rgba(3,43,27,0.09);border-color:rgba(201,154,60,0.5);}
+  .card{background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(3,43,27,.05);border:1px solid var(--line);cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,border-color .14s;}
+  .card:hover{transform:translateY(-1px);box-shadow:0 7px 22px rgba(3,43,27,.10);border-color:rgba(4,59,38,.24);}
   .card.active{border-color:var(--gold);border-width:2px;}
   .card-body{padding:15px 16px 16px;}
   .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:9px;margin-bottom:2px;}
   .card-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:17px;color:var(--green);line-height:1.2;}
   .card-loc{font-size:12px;color:#6B7772;margin-bottom:11px;font-weight:500;}
-  .verified{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--white);background:var(--gold);padding:4px 8px;border-radius:20px;white-space:nowrap;}
-  .verified svg{width:9px;height:9px;}
-  .editor-note{background:linear-gradient(180deg,rgba(201,154,60,0.13),rgba(201,154,60,0.06));border:1px solid rgba(201,154,60,0.38);border-left:3px solid var(--gold);border-radius:8px;padding:9px 11px;margin-bottom:11px;}
+  .verified{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.55px;color:#6B5120;background:#FFF8E8;border:1px solid rgba(201,154,60,.55);padding:4px 8px;border-radius:20px;white-space:nowrap;}
+  .verified svg{width:9px;height:9px;stroke:var(--gold-dim)!important;}
+  .editor-note{background:#FBF7EF;border:1px solid rgba(201,154,60,.28);border-left:3px solid var(--gold);border-radius:8px;padding:9px 11px;margin-bottom:11px;}
   .editor-note .etxt{font-size:12.5px;line-height:1.45;color:#5A4A24;font-style:italic;}
   .editor-note .eby{font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gold-dim);margin-top:5px;}
   .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
   .tag{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:rgba(4,59,38,0.06);color:var(--green-soft);}
   .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;border-top:1px solid var(--line);padding-top:11px;}
-  .stat{text-align:center;}
+  .stat{text-align:left;padding:0 7px;border-right:1px solid var(--line);}.stat:first-child{padding-left:0}.stat:last-child{border-right:0;padding-right:0}
   .stat .lab{font-family:'Archivo',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#8A938E;margin-bottom:2px;}
   .stat .val{font-size:12.5px;font-weight:700;color:var(--green);}
   .stat .val.unk{color:#B7ADA0;font-weight:500;font-style:italic;}
@@ -111,8 +111,8 @@
   .drawer-close:hover{background:rgba(255,255,255,0.28);}
   .drawer-name{font-family:'Archivo',sans-serif;font-weight:800;font-size:22px;line-height:1.15;margin-bottom:5px;padding-right:36px;}
   .drawer-loc{font-size:13px;opacity:0.82;}
-  .drawer-verified{display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;background:var(--gold);color:#fff;padding:4px 9px;border-radius:20px;margin-top:10px;}
-  .drawer-verified svg{width:10px;height:10px;}
+  .drawer-verified{display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;background:#FFF8E8;color:#6B5120;padding:4px 9px;border-radius:20px;margin-top:10px;border:1px solid rgba(201,154,60,.5);}
+  .drawer-verified svg{width:10px;height:10px;stroke:var(--gold-dim)!important;}
   .drawer-body{padding:20px 22px 30px;}
   .drawer-section{margin-bottom:20px;}
   .drawer-section h4{font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#8A938E;margin-bottom:9px;}
@@ -172,13 +172,41 @@
   .listwrap{min-height:0;}
   @media(max-width:600px){.stage{height:auto!important;}}
 
+  /* ---------- Mobile polish ---------- */
+  @media(max-width:600px){
+    #t-split{display:none;}
+    .filters{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:9px 12px;}
+    .search{grid-column:1 / -1;min-width:0;max-width:none;flex:none;}
+    .filters select{max-width:none;width:100%;min-width:0;}
+    #f-city{grid-column:1;}
+    #f-hood{grid-column:2;}
+    .clear-btn{grid-column:1;justify-self:start;padding-left:2px;}
+    .spacer{display:none;}
+    .count{grid-column:1;justify-self:start;align-self:center;}
+    .toggle{grid-column:2;justify-self:end;}
+    .toggle button{padding:8px 13px;}
+    .listwrap{padding:11px 10px 16px;}
+    .list-grid{gap:10px;}
+    .card-body{padding:14px;}
+    .card-name{font-size:16px;}
+    .verified{font-size:8px;padding:3px 7px;}
+    .editor-note{margin-top:2px;}
+    .footer .fnotes .fnote:first-child{display:none;}
+    .footer{padding:9px 12px;}
+    .drawer{top:auto;bottom:0;right:0;width:100%;max-width:none;height:min(88dvh,760px);border-radius:18px 18px 0 0;transform:translateY(102%);}
+    .drawer.open{transform:translateY(0);}
+    .drawer-head{padding:18px 18px 16px;border-radius:18px 18px 0 0;}
+    .drawer-body{padding:18px 16px 28px;}
+    .drawer-close{top:14px;right:14px;}
+  }
+
 </style>
 </head>
 <body>
 <div class="topbar">
   <img class="logo" src="/assets/logo.png" alt="The Remote Cafe">
   <div class="topbar-right">
-    <div class="tagline">Remote work friendly cafes<br>curated for getting work done</div>
+    <div class="tagline">Remote-work-friendly cafes<br>curated for getting work done</div>
     <a class="suggest-btn" href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
       <span><span class="lbl-long">Suggest a </span>cafe</span>
@@ -214,9 +242,8 @@
 
 <div class="footer">
   <div class="fnotes">
-    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Info reflects business days — hours &amp; vibe differ on weekends &amp; holidays</span>
-    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>Cafe details can change. Confirm anything critical before heading over</span>
-    <a class="fnote" href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Know a spot we&#39;re missing? <u style="text-decoration-color:var(--gold);">Suggest a cafe</u></a>
+    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Work conditions can vary by day and time</span>
+    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>Unconfirmed details are left unconfirmed, not guessed</span>
   </div>
   <div class="fright">
     <a class="ig" href="https://www.instagram.com/theremotecafe?igsh=MWQ4eDVnZW5jaHJyOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" title="Follow us on Instagram">
@@ -301,7 +328,7 @@ function filtered(){
 const GOOD=['Excellent','Good','Plenty','Quiet','Unlimited','Yes'],BAD=['None','No','Loud','Hostile','<1hr'];
 function valClass(val){if(!val||val==='Unconfirmed')return'unk';if(GOOD.includes(val))return'good';if(BAD.includes(val))return'bad';return'';}
 function statCell(label,val){
-  if(!val||val==='Unconfirmed')return'<div class="stat"><div class="lab">'+label+'</div><div class="val unk">—</div></div>';
+  if(!val||val==='Unconfirmed')return'<div class="stat"><div class="lab">'+label+'</div><div class="val unk">Not checked</div></div>';
   return'<div class="stat"><div class="lab">'+label+'</div><div class="val '+valClass(val)+'">'+esc(val)+'</div></div>';
 }
 
@@ -309,7 +336,7 @@ function cardHTML(r){
   const f=r.fields,badge=!!f.editor_verified,hasTake=!!f.editor_review;
   return '<div class="card'+(r.id===activeId?' active':'')+'" data-id="'+r.id+'"><div class="card-body">'
     +'<div class="card-head"><div class="card-name">'+esc(f.name||'Unnamed')+'</div>'
-    +(badge?'<span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</span>':'')+'</div>'
+    +(badge?'<span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="#A67D2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</span>':'')+'</div>'
     +'<div class="card-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
     +(hasTake?'<div class="editor-note"><div class="etxt">'+esc(clip(f.editor_review,150))+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div>':'')
     +'<div class="tags">'+(f.tags||[]).slice(0,4).map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>'
@@ -366,7 +393,7 @@ function openDrawer(id){
     '<div class="drawer-head"><button class="drawer-close" onclick="closeDrawer()">×</button>'
     +'<div class="drawer-name">'+esc(f.name||'Unnamed')+'</div>'
     +'<div class="drawer-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
-    +(badge?'<div class="drawer-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</div>':'')
+    +(badge?'<div class="drawer-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#A67D2E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</div>':'')
     +'</div><div class="drawer-body">'
     +(hasTake?'<div class="drawer-section"><h4>Editor\'s Take</h4><div class="editor-note"><div class="etxt">'+esc(f.editor_review)+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div></div>':'')
     +'<div class="drawer-section"><h4>Work-from stats</h4><div class="detail-grid">'
@@ -377,7 +404,7 @@ function openDrawer(id){
     +'</div></div>'
     +((f.tags&&f.tags.length)?'<div class="drawer-section"><h4>Features</h4><div class="drawer-tags">'+f.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div></div>':'')
     +'<div class="drawer-section">'
-    +(r.slug?'<a class="drawer-btn ghost" href="/cafe/'+encodeURIComponent(r.slug)+'/">View cafe page</a>':'')
+    +(r.slug?'<a class="drawer-btn ghost" href="/cafe/'+encodeURIComponent(r.slug)+'/">Full cafe details</a>':'')
     +(gmaps?'<a class="drawer-btn" href="'+gmaps+'" target="_blank" rel="noopener">Open in Google Maps</a>':'')
     +(f.website?'<a class="drawer-btn ghost" href="'+esc(f.website)+'" target="_blank" rel="noopener">Visit site</a>':'')
     +(f.last_confirmed_date?'<div class="drawer-meta">Data last checked '+fmtDate(f.last_confirmed_date)+'</div>':'')

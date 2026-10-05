@@ -1,13 +1,29 @@
-THE REMOTE CAFE - DEPLOYMENT NOTES
+THE REMOTE CAFE — POLISHED PRODUCTION BUILD
 
-Files in this folder replace the current single index.html setup.
+Use this folder as the ROOT of your GitHub repository.
 
-IMPORTANT: before deploying, add AIRTABLE_TOKEN in Vercel as an Environment Variable.
-Optional: add SITE_URL. If omitted, the current Vercel URL is used.
+Included:
+- OpenFreeMap + Leaflet map
+- Mobile List-first experience
+- Mobile cafe detail bottom sheet
+- Private Airtable API through /api/cafes
+- Build-time Airtable snapshot for SEO/fallback
+- Cafe, city and neighbourhood SEO pages
+- sitemap.xml + robots.txt
+- External logo/favicon assets
+- Resilient build: Airtable failure cannot take the homepage offline
+- UI/editorial polish pass
 
-The site now:
-- builds crawlable cafe, city and neighbourhood pages from Airtable
-- keeps a build-time data snapshot for fast loading and fallback
-- refreshes live data through /api/cafes without exposing the Airtable token
-- keeps Editor Verified and Editor's Take independent
-- uses OpenFreeMap for the interactive map
+Required Vercel environment variable:
+AIRTABLE_TOKEN = your read-only Airtable PAT
+
+The canonical Vercel project is:
+the-remote-cafe-ind
+
+Deployment:
+1. Upload the CONTENTS of this folder to the root of the GitHub repo.
+2. Commit.
+3. Vercel should deploy automatically.
+4. Check homepage, /api/cafes, /sitemap.xml and /robots.txt.
+
+Do not create a hand-written index.html in the repo. build.js generates dist/index.html during deployment.
