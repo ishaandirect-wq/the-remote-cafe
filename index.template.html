@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Remote Cafe — Remote work friendly cafes in Mumbai</title>
+<meta name="description" content="A curated directory of remote-work-friendly cafes in Mumbai, with practical details on WiFi, outlets, noise and working conditions.">
+<link rel="canonical" href="__SITE_URL__/">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@1,600&display=swap');
+  :root{
+    --green:#043B26;--green-deep:#032B1B;--green-soft:#0A4E33;
+    --beige:#EBE3DD;--beige-hi:#F4EFEA;--white:#FFFFFF;
+    --gold:#C99A3C;--gold-dim:#A67D2E;--ok:#2E9E6B;--rust:#C0603A;--ink:#16201C;
+    --line:rgba(4,59,38,0.13);--shadow:0 2px 8px rgba(3,43,27,0.07),0 8px 24px rgba(3,43,27,0.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:'Inter',sans-serif;background:var(--beige);color:var(--ink);-webkit-font-smoothing:antialiased;overflow:hidden;}
+
+  /* ---------- Header ---------- */
+  .topbar{background:var(--beige);padding:8px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);overflow:visible;}
+  .logo{height:78px;width:auto;display:block;flex-shrink:0;}
+  @media(max-width:900px){.logo{height:66px;}}
+  @media(max-width:600px){.logo{height:52px;}.topbar{padding:8px 14px;}}
+  .topbar-right{display:flex;align-items:center;gap:16px;flex-shrink:0;}
+  .tagline{font-size:13px;font-weight:600;color:var(--green);opacity:0.72;text-align:right;line-height:1.35;}
+  @media(max-width:820px){.tagline{display:none;}}
+  .suggest-btn{display:inline-flex;align-items:center;gap:7px;background:var(--green);color:var(--beige-hi);font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.3px;padding:11px 18px;border-radius:10px;text-decoration:none;white-space:nowrap;transition:background .15s,transform .15s;box-shadow:0 2px 8px rgba(4,59,38,0.18);}
+  .suggest-btn:hover{background:var(--green-soft);transform:translateY(-1px);}
+  .suggest-btn svg{width:15px;height:15px;stroke:var(--gold);stroke-width:2.5;}
+  @media(max-width:600px){.suggest-btn{padding:10px 14px;font-size:12px;}.suggest-btn .lbl-long{display:none;}}
+
+  /* ---------- Filter bar ---------- */
+  .filters{background:var(--beige-hi);border-bottom:1px solid var(--line);padding:10px 22px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;}
+  @media(max-width:600px){.filters{padding:9px 14px;gap:7px;}}
+  .search{position:relative;flex:0 1 240px;min-width:150px;}
+  .search input{width:100%;font-family:'Inter',sans-serif;font-size:13px;padding:9px 13px 9px 34px;border-radius:9px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);}
+  .search input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:#8A938E;}
+  .filters select{font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1.5px solid var(--line);background:var(--white);color:var(--ink);cursor:pointer;transition:border-color .15s;max-width:150px;}
+  .filters select:hover{border-color:var(--green-soft);}
+  .filters select:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .filters select.on{border-color:var(--green);background:rgba(4,59,38,0.05);font-weight:600;}
+  .clear-btn{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--rust);background:none;border:none;cursor:pointer;padding:6px 8px;display:none;}
+  .clear-btn.show{display:inline;}
+  .spacer{flex:1;min-width:0;}
+  .count{font-size:12px;font-weight:700;color:var(--green);background:rgba(4,59,38,0.07);padding:6px 12px;border-radius:20px;white-space:nowrap;}
+  .toggle{display:flex;border:1.5px solid var(--green);border-radius:9px;overflow:hidden;}
+  .toggle button{font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;padding:8px 14px;background:var(--white);color:var(--green);border:none;cursor:pointer;transition:all .15s;}
+  .toggle button.active{background:var(--green);color:var(--beige-hi);}
+
+  /* ---------- Stage: split map + list ---------- */
+  .stage{display:flex;height:calc(100vh - 196px);overflow:hidden;}
+  @media(max-width:600px){.stage{height:calc(100vh - 214px);}}
+  #map{flex:1;height:100%;}
+  .listwrap{width:420px;max-width:42vw;height:100%;overflow-y:auto;background:var(--beige);border-left:1px solid var(--line);padding:16px;}
+  @media(max-width:900px){.listwrap{width:360px;}}
+
+  /* view modes: map-only, list-only, split */
+  .stage.map-only .listwrap{display:none;}
+  .stage.list-only #map{display:none;}
+  .stage.list-only .listwrap{width:100%;max-width:100%;border-left:none;}
+  .stage.list-only{display:block;}
+  .stage.list-only .listwrap{max-width:1180px;margin:0 auto;}
+  @media(max-width:600px){
+    .stage .listwrap{width:100%;max-width:100%;border-left:none;}
+    .stage.split #map{display:none;}
+    .stage.split .listwrap{width:100%;max-width:100%;}
+  }
+
+  .list-grid{display:flex;flex-direction:column;gap:12px;}
+  .stage.list-only .list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1180px;margin:0 auto;}
+
+  /* ---------- Card ---------- */
+  .card{background:var(--white);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,border-color .14s;}
+  .card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(3,43,27,0.11),0 14px 34px rgba(3,43,27,0.09);border-color:rgba(201,154,60,0.5);}
+  .card.active{border-color:var(--gold);border-width:2px;}
+  .card-body{padding:15px 16px 16px;}
+  .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:9px;margin-bottom:2px;}
+  .card-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:17px;color:var(--green);line-height:1.2;}
+  .card-loc{font-size:12px;color:#6B7772;margin-bottom:11px;font-weight:500;}
+  .verified{flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--white);background:var(--gold);padding:4px 8px;border-radius:20px;white-space:nowrap;}
+  .verified svg{width:9px;height:9px;}
+  .editor-note{background:linear-gradient(180deg,rgba(201,154,60,0.13),rgba(201,154,60,0.06));border:1px solid rgba(201,154,60,0.38);border-left:3px solid var(--gold);border-radius:8px;padding:9px 11px;margin-bottom:11px;}
+  .editor-note .etxt{font-size:12.5px;line-height:1.45;color:#5A4A24;font-style:italic;}
+  .editor-note .eby{font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gold-dim);margin-top:5px;}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+  .tag{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:rgba(4,59,38,0.06);color:var(--green-soft);}
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;border-top:1px solid var(--line);padding-top:11px;}
+  .stat{text-align:center;}
+  .stat .lab{font-family:'Archivo',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#8A938E;margin-bottom:2px;}
+  .stat .val{font-size:12.5px;font-weight:700;color:var(--green);}
+  .stat .val.unk{color:#B7ADA0;font-weight:500;font-style:italic;}
+  .stat .val.good{color:var(--ok);}
+  .stat .val.bad{color:var(--rust);}
+  .card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:11px;gap:8px;}
+  .price{font-size:13px;font-weight:700;color:var(--green-soft);}
+  .fresh{font-size:10px;color:#9AA39E;font-weight:500;}
+
+  /* ---------- Detail drawer ---------- */
+  .drawer-bg{position:fixed;inset:0;background:rgba(3,43,27,0.4);opacity:0;pointer-events:none;transition:opacity .2s;z-index:200;}
+  .drawer-bg.open{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:440px;max-width:92vw;background:var(--beige-hi);box-shadow:-8px 0 30px rgba(3,43,27,0.2);transform:translateX(100%);transition:transform .24s ease;z-index:201;overflow-y:auto;}
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{background:var(--green);color:var(--beige-hi);padding:20px 22px;position:relative;}
+  .drawer-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);border:none;color:var(--beige-hi);width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;}
+  .drawer-close:hover{background:rgba(255,255,255,0.28);}
+  .drawer-name{font-family:'Archivo',sans-serif;font-weight:800;font-size:22px;line-height:1.15;margin-bottom:5px;padding-right:36px;}
+  .drawer-loc{font-size:13px;opacity:0.82;}
+  .drawer-verified{display:inline-flex;align-items:center;gap:4px;font-family:'Archivo',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;background:var(--gold);color:#fff;padding:4px 9px;border-radius:20px;margin-top:10px;}
+  .drawer-verified svg{width:10px;height:10px;}
+  .drawer-body{padding:20px 22px 30px;}
+  .drawer-section{margin-bottom:20px;}
+  .drawer-section h4{font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#8A938E;margin-bottom:9px;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .detail-cell{background:var(--white);border:1px solid var(--line);border-radius:9px;padding:10px 12px;}
+  .detail-cell .dl{font-family:'Archivo',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#8A938E;margin-bottom:3px;}
+  .detail-cell .dv{font-size:14px;font-weight:600;color:var(--green);}
+  .detail-cell .dv.unk{color:#B7ADA0;font-style:italic;font-weight:400;font-size:13px;}
+  .detail-cell .dv.good{color:var(--ok);}
+  .detail-cell .dv.bad{color:var(--rust);}
+  .drawer .editor-note{margin-bottom:0;}
+  .drawer-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .drawer-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:var(--green);color:var(--beige-hi);font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:13px;border-radius:10px;text-decoration:none;transition:background .15s;margin-bottom:9px;}
+  .drawer-btn:hover{background:var(--green-soft);}
+  .drawer-btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);}
+  .drawer-btn.ghost:hover{background:rgba(4,59,38,0.06);}
+  .drawer-meta{font-size:11px;color:#9AA39E;text-align:center;margin-top:6px;line-height:1.5;}
+
+  /* ---------- Leaflet ---------- */
+  .leaflet-popup-content-wrapper{border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);}
+  .leaflet-popup-content{font-family:'Inter',sans-serif;margin:12px 14px;min-width:180px;}
+  .leaflet-popup-content .pop-name{font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;color:var(--green);margin-bottom:2px;}
+  .leaflet-popup-content .pop-loc{font-size:11.5px;color:#6B7772;margin-bottom:7px;}
+  .leaflet-popup-content .pop-stats{font-size:12px;color:var(--ink);line-height:1.5;margin-bottom:8px;}
+  .leaflet-popup-content .pop-btn{display:inline-block;font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#fff;background:var(--green);padding:6px 11px;border-radius:6px;cursor:pointer;}
+
+  .loading,.empty{text-align:center;padding:60px 24px;color:#6B7772;font-size:14px;}
+  .loading .dot{display:inline-block;animation:pulse 1.2s infinite;}
+  @keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+
+  /* ---------- Status / resilience ---------- */
+  .status-banner{display:none;align-items:center;justify-content:space-between;gap:12px;background:#FFF8E8;color:#6B5120;border-bottom:1px solid rgba(201,154,60,.32);padding:9px 22px;font-size:12px;line-height:1.4;}
+  .status-banner.show{display:flex;}
+  .status-banner strong{font-family:'Archivo',sans-serif;color:var(--green);}
+  .status-banner button{border:0;background:transparent;color:var(--green);font:600 12px 'Inter',sans-serif;cursor:pointer;text-decoration:underline;text-decoration-color:var(--gold);}
+  @media(max-width:600px){.status-banner{padding:9px 14px;align-items:flex-start;}}
+  .map-fallback{height:100%;display:flex;align-items:center;justify-content:center;padding:30px;text-align:center;color:#6B7772;background:linear-gradient(180deg,var(--beige-hi),var(--beige));}
+  .map-fallback .big{font-family:'Archivo',sans-serif;color:var(--green);font-size:16px;font-weight:700;margin-bottom:6px;}
+
+  /* ---------- Footer ---------- */
+  .footer{background:var(--green);color:rgba(244,239,234,0.85);padding:11px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11.5px;line-height:1.5;}
+  .footer .fnotes{display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
+  .footer .fnote{display:inline-flex;align-items:center;gap:6px;}
+  .footer .fnote svg{width:13px;height:13px;stroke:var(--gold);flex-shrink:0;}
+  .footer .fright{display:flex;align-items:center;gap:14px;flex-shrink:0;}
+  .footer a.ig{display:inline-flex;align-items:center;gap:6px;color:var(--beige-hi);text-decoration:none;font-weight:600;}
+  .footer a.ig:hover{color:var(--gold);}
+  .footer a.ig svg{width:17px;height:17px;}
+  .footer .fcopy{color:rgba(244,239,234,0.55);}
+  @media(max-width:700px){.footer{padding:10px 16px;font-size:10.5px;gap:8px;}.footer .fnotes{gap:10px;}}
+  .empty .big{font-family:'Archivo',sans-serif;font-weight:700;font-size:16px;color:var(--green);margin-bottom:6px;}
+
+  /* ---------- Layout hardening ---------- */
+  body{display:flex;flex-direction:column;height:100dvh;min-height:100vh;}
+  .topbar,.filters,.status-banner,.footer{flex-shrink:0;}
+  .stage{height:auto!important;flex:1 1 auto;min-height:0;}
+  .listwrap{min-height:0;}
+  @media(max-width:600px){.stage{height:auto!important;}}
+
+</style>
+</head>
+<body>
+<div class="topbar">
+  <img class="logo" src="/assets/logo.png" alt="The Remote Cafe">
+  <div class="topbar-right">
+    <div class="tagline">Remote work friendly cafes<br>curated for getting work done</div>
+    <a class="suggest-btn" href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      <span><span class="lbl-long">Suggest a </span>cafe</span>
+    </a>
+  </div>
+</div>
+
+<div class="status-banner" id="status-banner"><div id="status-text"></div><button id="status-action" type="button">View list</button></div>
+
+<div class="filters">
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="f-search" placeholder="Search cafe or area…" autocomplete="off">
+  </div>
+  <select id="f-city"><option value="">All cities</option></select>
+  <select id="f-hood"><option value="">All areas</option></select>
+  <button class="clear-btn" id="clear">Clear all</button>
+  <div class="spacer"></div>
+  <span class="count" id="count">…</span>
+  <div class="toggle">
+    <button id="t-split" class="active">Split</button>
+    <button id="t-map">Map</button>
+    <button id="t-list">List</button>
+  </div>
+</div>
+
+<div class="stage split" id="stage">
+  <div id="map"></div>
+  <div class="listwrap">
+    <div class="list-grid" id="list"><div class="loading">Loading cafes<span class="dot">…</span></div></div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="fnotes">
+    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Info reflects business days — hours &amp; vibe differ on weekends &amp; holidays</span>
+    <span class="fnote"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>Cafe details can change. Confirm anything critical before heading over</span>
+    <a class="fnote" href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Know a spot we&#39;re missing? <u style="text-decoration-color:var(--gold);">Suggest a cafe</u></a>
+  </div>
+  <div class="fright">
+    <a class="ig" href="https://www.instagram.com/theremotecafe?igsh=MWQ4eDVnZW5jaHJyOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" title="Follow us on Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      Follow
+    </a>
+    <span class="fcopy">© 2026 The Remote Cafe</span>
+  </div>
+</div>
+
+<div class="drawer-bg" id="drawer-bg"></div>
+<div class="drawer" id="drawer"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
+<script>
+/* Build-time snapshot. Fresh data is fetched privately through /api/cafes. */
+const INITIAL_RECORDS = __INITIAL_RECORDS_JSON__;
+
+let RECORDS=[], map, markersLayer, baseLayer=null, markerById={}, activeId=null;
+
+async function fetchAll(){
+  try{
+    const r=await fetch('/api/cafes',{headers:{Accept:'application/json'}});
+    if(!r.ok)throw new Error('API '+r.status);
+    const d=await r.json();
+    return Array.isArray(d.records)?d.records:[];
+  }catch(e){
+    if(INITIAL_RECORDS.length){
+      showStatus('<strong>Using the latest saved cafe data.</strong> Live refresh is temporarily unavailable.');
+      return INITIAL_RECORDS;
+    }
+    showError('Could not load cafes right now. Please try again.');
+    return[];
+  }
+}
+function showStatus(msg,actionLabel='View list'){
+  const b=document.getElementById('status-banner'),t=document.getElementById('status-text'),a=document.getElementById('status-action');
+  if(!b||!t)return;
+  t.innerHTML=msg;
+  if(a){a.textContent=actionLabel;a.style.display='inline';}
+  b.classList.add('show');
+}
+function hideStatus(){const b=document.getElementById('status-banner');if(b)b.classList.remove('show');}
+function showError(msg){
+  document.getElementById('list').innerHTML='<div class="empty"><div class="big">Couldn\'t load cafes</div><div>'+esc(msg)+'</div><div style="margin-top:12px"><button class="drawer-btn" style="max-width:180px;margin:0 auto;border:0;cursor:pointer" onclick="location.reload()">Try again</button></div></div>';
+  document.getElementById('count').textContent='Unavailable';
+  showStatus('<strong>We couldn\'t load the cafe list.</strong> Please try again.','Retry');
+  const a=document.getElementById('status-action');if(a)a.onclick=()=>location.reload();
+}
+
+function fillDropdowns(recs){
+  const cs=document.getElementById('f-city'),hs=document.getElementById('f-hood');
+  cs.innerHTML='<option value="">All cities</option>';hs.innerHTML='<option value="">All areas</option>';
+  const cities=new Set(),hoods=new Set();
+  recs.forEach(r=>{
+    if(r.fields.city)cities.add(r.fields.city);
+    if(r.fields.neighborhood)hoods.add(r.fields.neighborhood);
+  });
+  [...cities].sort().forEach(c=>cs.add(new Option(c,c)));
+  [...hoods].sort().forEach(h=>hs.add(new Option(h,h)));
+}
+
+const v=id=>document.getElementById(id).value;
+function filtered(){
+  const q=v('f-search').trim().toLowerCase(),city=v('f-city'),hood=v('f-hood');
+  return RECORDS.filter(r=>{
+    const f=r.fields;
+    if(f.status!=='Live')return false;          // only Live rows ever show (also skips blank rows)
+    if(!f.name)return false;                     // extra guard against empty rows
+    if(city&&f.city!==city)return false;
+    if(hood&&f.neighborhood!==hood)return false;
+    if(q){
+      const hay=((f.name||'')+' '+(f.neighborhood||'')+' '+(f.city||'')+' '+(f.address||'')).toLowerCase();
+      if(!hay.includes(q))return false;
+    }
+    return true;
+  });
+}
+
+const GOOD=['Excellent','Good','Plenty','Quiet','Unlimited','Yes'],BAD=['None','No','Loud','Hostile','<1hr'];
+function valClass(val){if(!val||val==='Unconfirmed')return'unk';if(GOOD.includes(val))return'good';if(BAD.includes(val))return'bad';return'';}
+function statCell(label,val){
+  if(!val||val==='Unconfirmed')return'<div class="stat"><div class="lab">'+label+'</div><div class="val unk">—</div></div>';
+  return'<div class="stat"><div class="lab">'+label+'</div><div class="val '+valClass(val)+'">'+esc(val)+'</div></div>';
+}
+
+function cardHTML(r){
+  const f=r.fields,badge=!!f.editor_verified,hasTake=!!f.editor_review;
+  return '<div class="card'+(r.id===activeId?' active':'')+'" data-id="'+r.id+'"><div class="card-body">'
+    +'<div class="card-head"><div class="card-name">'+esc(f.name||'Unnamed')+'</div>'
+    +(badge?'<span class="verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</span>':'')+'</div>'
+    +'<div class="card-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
+    +(hasTake?'<div class="editor-note"><div class="etxt">'+esc(clip(f.editor_review,150))+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div>':'')
+    +'<div class="tags">'+(f.tags||[]).slice(0,4).map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>'
+    +'<div class="stats">'+statCell('Wifi',f.wifi_status)+statCell('Outlets',f.outlet_count)+statCell('Noise',f.noise_level)+'</div>'
+    +'<div class="card-foot">'
+    +(f.price_tier?'<span class="price">'+esc(f.price_tier)+'</span>':'<span></span>')
+    +(f.last_confirmed_date?'<span class="fresh">Checked '+fmtDate(f.last_confirmed_date)+'</span>':'')
+    +'</div></div></div>';
+}
+
+function renderList(recs){
+  const el=document.getElementById('list');
+  if(!recs.length){el.innerHTML='<div class="empty"><div class="big">No cafes found</div>Try another area or clear your filters.</div>';return;}
+  el.innerHTML=recs.map(cardHTML).join('');
+  el.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('click',e=>{ openDrawer(c.dataset.id); });
+  });
+}
+
+function renderMap(recs){
+  if(!map||!markersLayer)return;
+  markersLayer.clearLayers();markerById={};
+  const pts=[];
+  recs.forEach(r=>{
+    const f=r.fields;if(!f.lat||!f.long)return;
+    const badge=!!f.editor_verified;
+    const mk=L.circleMarker([f.lat,f.long],{radius:8,color:'#fff',weight:2.5,fillColor:badge?'#C99A3C':'#043B26',fillOpacity:0.95});
+    mk.bindPopup(
+      '<div class="pop-name">'+esc(f.name||'Unnamed')+'</div>'
+      +'<div class="pop-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
+      +'<div class="pop-stats">Wifi: <b>'+(f.wifi_status&&f.wifi_status!=='Unconfirmed'?esc(f.wifi_status):'—')+'</b> · Noise: <b>'+(f.noise_level&&f.noise_level!=='Unconfirmed'?esc(f.noise_level):'—')+'</b></div>'
+      +'<span class="pop-btn" onclick="openDrawer(\''+r.id+'\')">View details</span>'
+    );
+    mk.on('click',()=>{setActive(r.id,false);});
+    mk.addTo(markersLayer);markerById[r.id]=mk;pts.push([f.lat,f.long]);
+  });
+  if(pts.length)map.fitBounds(pts,{padding:[50,50],maxZoom:15});
+}
+
+function setActive(id,pan){
+  activeId=id;
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('active',c.dataset.id===id));
+  const c=document.querySelector('.card.active');if(c)c.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(pan&&markerById[id]){const ll=markerById[id].getLatLng();map.panTo(ll);markerById[id].openPopup();}
+}
+
+function openDrawer(id){
+  const r=RECORDS.find(x=>x.id===id);if(!r)return;
+  const f=r.fields,badge=!!f.editor_verified,hasTake=!!f.editor_review;
+  setActive(id,true);
+  const dc=(label,val)=>'<div class="detail-cell"><div class="dl">'+label+'</div><div class="dv '+valClass(val)+'">'+((!val||val==='Unconfirmed')?'Not yet confirmed':esc(val))+'</div></div>';
+  const gmaps=f.google_place_id?'https://www.google.com/maps/place/?q=place_id:'+f.google_place_id:(f.lat?'https://www.google.com/maps/search/?api=1&query='+f.lat+','+f.long:'');
+  document.getElementById('drawer').innerHTML=
+    '<div class="drawer-head"><button class="drawer-close" onclick="closeDrawer()">×</button>'
+    +'<div class="drawer-name">'+esc(f.name||'Unnamed')+'</div>'
+    +'<div class="drawer-loc">'+esc([f.neighborhood,f.city].filter(Boolean).join(', '))+'</div>'
+    +(badge?'<div class="drawer-verified"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Editor Verified</div>':'')
+    +'</div><div class="drawer-body">'
+    +(hasTake?'<div class="drawer-section"><h4>Editor\'s Take</h4><div class="editor-note"><div class="etxt">'+esc(f.editor_review)+'</div><div class="eby">— Editor'+(f.editor_verified_date?', '+fmtDate(f.editor_verified_date):'')+'</div></div></div>':'')
+    +'<div class="drawer-section"><h4>Work-from stats</h4><div class="detail-grid">'
+    +dc('Wifi',f.wifi_status)+dc('Outlets',f.outlet_count)+dc('Noise',f.noise_level)+dc('Sit for',f.seating_duration)+dc('AC',f.ac===true?'Yes':(f.ac===false?'No':f.ac))+dc('Laptop-friendly',f.laptop_friendly_staff)
+    +'</div></div>'
+    +'<div class="drawer-section"><h4>Good to know</h4><div class="detail-grid">'
+    +dc('Price',f.price_tier)+dc('Hours',f.hours)
+    +'</div></div>'
+    +((f.tags&&f.tags.length)?'<div class="drawer-section"><h4>Features</h4><div class="drawer-tags">'+f.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div></div>':'')
+    +'<div class="drawer-section">'
+    +(r.slug?'<a class="drawer-btn ghost" href="/cafe/'+encodeURIComponent(r.slug)+'/">View cafe page</a>':'')
+    +(gmaps?'<a class="drawer-btn" href="'+gmaps+'" target="_blank" rel="noopener">Open in Google Maps</a>':'')
+    +(f.website?'<a class="drawer-btn ghost" href="'+esc(f.website)+'" target="_blank" rel="noopener">Visit site</a>':'')
+    +(f.last_confirmed_date?'<div class="drawer-meta">Data last checked '+fmtDate(f.last_confirmed_date)+'</div>':'')
+    +'</div>'
+    +'</div>';
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-bg').classList.add('open');
+}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('drawer-bg').classList.remove('open');}
+
+function refresh(){
+  const recs=filtered();
+  document.getElementById('count').textContent=recs.length+' spot'+(recs.length===1?'':'s');
+  renderList(recs);renderMap(recs);
+  ['f-city','f-hood'].forEach(id=>{const el=document.getElementById(id);el.classList.toggle('on',!!el.value);});
+  const anyFilter=v('f-search')||v('f-city')||v('f-hood');
+  document.getElementById('clear').classList.toggle('show',!!anyFilter);
+}
+
+function setView(view){
+  if((view==='map'||view==='split')&&!map){
+    showStatus('<strong>Map is temporarily unavailable.</strong> The cafe list still works normally.');
+    view='list';
+  }
+  const s=document.getElementById('stage');
+  s.className='stage '+(view==='split'?'split':view==='map'?'map-only':'list-only');
+  document.getElementById('t-split').classList.toggle('active',view==='split');
+  document.getElementById('t-map').classList.toggle('active',view==='map');
+  document.getElementById('t-list').classList.toggle('active',view==='list');
+  if(view!=='list'&&map)setTimeout(()=>{
+    map.invalidateSize();
+    try{
+      const gl=baseLayer&&baseLayer.getMaplibreMap&&baseLayer.getMaplibreMap();
+      if(gl)gl.resize();
+    }catch(e){}
+  },140);
+}
+
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clip=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n).trim()+'…':s;};
+const fmtDate=d=>{try{return new Date(d).toLocaleDateString('en-IN',{month:'short',year:'numeric'});}catch(e){return d;}};
+
+document.getElementById('t-split').onclick=()=>setView('split');
+document.getElementById('t-map').onclick=()=>setView('map');
+document.getElementById('t-list').onclick=()=>setView('list');
+['f-city','f-hood'].forEach(id=>document.getElementById(id).onchange=refresh);
+document.getElementById('f-search').addEventListener('input',refresh);
+document.getElementById('clear').onclick=()=>{['f-search','f-city','f-hood'].forEach(id=>document.getElementById(id).value='');refresh();};
+document.getElementById('drawer-bg').onclick=closeDrawer;
+document.getElementById('status-action').onclick=()=>setView('list');
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+
+(async function init(){
+  // Mobile visitors, especially from Instagram, start with the reliable list view.
+  if(window.matchMedia('(max-width: 600px)').matches)setView('list');
+
+  try{
+    if(typeof L!=='undefined' && typeof maplibregl!=='undefined' && typeof L.maplibreGL==='function'){
+      map=L.map('map',{zoomControl:true,minZoom:3,worldCopyJump:true}).setView([19.06,72.83],12);
+      baseLayer=L.maplibreGL({style:'https://tiles.openfreemap.org/styles/positron'}).addTo(map);
+      markersLayer=L.layerGroup().addTo(map);
+
+      // Treat a true map-load failure as an error, but do not scare users for harmless tile/style warnings.
+      try{
+        const gl=baseLayer.getMaplibreMap&&baseLayer.getMaplibreMap();
+        if(gl){
+          let mapReady=false;
+          gl.once('load',()=>{mapReady=true;});
+          gl.on('error',e=>console.warn('MapLibre:',e&&e.error?e.error:e));
+          setTimeout(()=>{
+            if(!mapReady){
+              showStatus('<strong>Map is taking longer than expected.</strong> You can still browse every cafe in List view.');
+              if(window.innerWidth<=900)setView('list');
+            }
+          },12000);
+        }
+      }catch(e){}
+    }else{
+      throw new Error('Map libraries unavailable');
+    }
+  }catch(e){
+    map=null;markersLayer=null;
+    const m=document.getElementById('map');
+    if(m)m.innerHTML='<div class="map-fallback"><div><div class="big">Map unavailable</div><div>Browse the cafe list while we reconnect the map.</div></div></div>';
+    showStatus('<strong>Map is temporarily unavailable.</strong> The cafe list still works normally.');
+    setView('list');
+  }
+
+  if(INITIAL_RECORDS.length){
+    RECORDS=INITIAL_RECORDS;
+    fillDropdowns(RECORDS);
+    refresh();
+  }
+  const fresh=await fetchAll();
+  if(fresh.length){
+    RECORDS=fresh;
+    fillDropdowns(RECORDS);
+    refresh();
+  }else if(!RECORDS.length){
+    showError('Could not load cafes right now. Please try again.');
+  }
+})();;
+</script>
+</body>
+</html>
