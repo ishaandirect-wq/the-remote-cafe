@@ -93,6 +93,29 @@ img{display:block;max-width:100%}
 
 /* sheets */
 .sheet-backdrop{position:fixed;inset:0;background:rgba(12,20,16,.25);z-index:89;opacity:0;pointer-events:none;transition:opacity .2s var(--ease)}.sheet-backdrop.show{opacity:1;pointer-events:auto}.sheet{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--paper);border-radius:22px 22px 0 0;padding:12px 18px max(24px,env(safe-area-inset-bottom));transform:translateY(103%);transition:transform .28s var(--ease);box-shadow:0 -20px 60px rgba(0,0,0,.16)}.sheet.open{transform:translateY(0)}.sheet-handle{width:42px;height:4px;background:#C9CEC9;border-radius:99px;margin:2px auto 12px}.sheet-head{display:flex;align-items:center;justify-content:space-between}.sheet-head h3{font-size:24px;margin:0}.sheet-close{border:0;background:transparent;font-size:22px;cursor:pointer}.sheet-group{margin-top:18px}.sheet-group label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#78847e;margin-bottom:7px}.sheet select{width:100%;height:46px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 12px}.sheet .btn{width:100%;margin-top:18px}
+
+/* focused mobile search */
+.search-launcher{cursor:pointer}.search-launcher input{pointer-events:none}
+.search-sheet{position:fixed;left:50%;bottom:0;z-index:94;width:min(720px,100%);max-height:min(88dvh,760px);background:var(--paper);border-radius:24px 24px 0 0;box-shadow:0 -24px 70px rgba(0,0,0,.2);transform:translate(-50%,103%);transition:transform .3s var(--ease);display:flex;flex-direction:column;overflow:hidden}
+.search-sheet.open{transform:translate(-50%,0)}
+.search-sheet-top{padding:10px 18px 14px;border-bottom:1px solid var(--line);position:relative;text-align:center;flex:0 0 auto}.search-sheet-top .sheet-handle{margin-bottom:10px}.search-sheet-top h3{font:700 20px/1.1 Inter,sans-serif;margin:0;color:#1d251f}.search-sheet-close{position:absolute;left:16px;top:22px;width:38px;height:38px;border:1px solid var(--line-2);border-radius:50%;background:var(--paper);font-size:24px;line-height:1;cursor:pointer;color:var(--green)}
+.search-sheet-scroll{overflow:auto;padding:20px 18px 22px;overscroll-behavior:contain}.search-section{padding-bottom:20px}.search-section+.search-section{border-top:1px solid var(--line);padding-top:20px}.search-section-title{font:750 18px/1.2 Inter,sans-serif;margin:0 0 12px;color:#20261f}.search-query-wrap{height:54px;border:1.5px solid var(--green);border-radius:14px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 14px;box-shadow:0 3px 0 rgba(4,59,38,.08)}.search-query-wrap .icon{width:20px;height:20px}.search-query-wrap input{width:100%;height:100%;border:0;outline:0;background:transparent;font-size:16px;color:var(--ink)}
+.search-suggestions{display:grid;gap:8px;margin-top:12px}.search-suggestion{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 12px;text-align:left;display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--ink)}.search-suggestion strong{display:block;font-size:13px}.search-suggestion span{display:block;font-size:11px;color:var(--muted);margin-top:2px}.search-suggestion .icon{width:18px;height:18px;color:var(--green);flex:0 0 auto}
+.search-choice{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer;color:var(--ink)}.search-choice.active{border:1.5px solid var(--green);box-shadow:inset 0 0 0 1px rgba(4,59,38,.08)}.search-choice strong{display:block;font-size:14px}.search-choice small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.choice-check{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:none;place-items:center;font-weight:800}.search-choice.active .choice-check{display:grid}
+.search-chip-row{display:flex;gap:8px;overflow:auto;padding:2px 1px 4px;scrollbar-width:none}.search-chip-row::-webkit-scrollbar{display:none}.search-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;white-space:nowrap;font-weight:650;font-size:12px;color:var(--green);cursor:pointer}.search-chip.active{background:var(--green);border-color:var(--green);color:#fff}
+.search-purpose-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.search-purpose{border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;text-align:left;font-size:12px;font-weight:700;color:var(--green);cursor:pointer;min-height:48px}.search-purpose.active{background:var(--green);color:white;border-color:var(--green)}
+.search-sheet-footer{display:flex;align-items:center;gap:14px;padding:13px 18px max(16px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(248,244,239,.98);backdrop-filter:blur(14px);flex:0 0 auto}.search-clear{border:0;background:transparent;text-decoration:underline;font-weight:650;color:var(--green);padding:10px 0;cursor:pointer}.search-apply{margin-left:auto;min-width:170px}.search-result-count{font-weight:800}
+
+
+@media(min-width:761px){
+  .search-sheet{left:50%;top:50%;bottom:auto;width:min(860px,calc(100vw - 56px));max-height:min(82vh,720px);border-radius:24px;transform:translate(-50%,-46%) scale(.985);opacity:0;pointer-events:none;box-shadow:0 28px 90px rgba(0,0,0,.24);transition:transform .24s var(--ease),opacity .2s var(--ease)}
+  .search-sheet.open{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
+  .search-sheet-top{padding:24px 28px 18px}.search-sheet-top .sheet-handle{display:none}.search-sheet-top h3{font-size:24px}.search-sheet-close{left:24px;top:18px;width:42px;height:42px}
+  .search-sheet-scroll{padding:24px 28px 26px}.search-query-wrap{height:60px;border-radius:15px}.search-query-wrap input{font-size:17px}
+  .search-purpose-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.search-purpose{min-height:68px;text-align:center;display:grid;place-items:center;padding:12px 8px}
+  .search-sheet-footer{padding:16px 28px 20px}.search-apply{min-width:210px}
+}
+
 .mobile-menu{position:fixed;inset:0 0 0 auto;width:min(340px,86vw);z-index:95;background:var(--paper);transform:translateX(102%);transition:transform .28s var(--ease);padding:24px;box-shadow:-20px 0 60px rgba(0,0,0,.15)}.mobile-menu.open{transform:translateX(0)}.mobile-menu-top{display:flex;align-items:center;justify-content:space-between}.mobile-menu img{width:150px}.mobile-menu nav{display:grid;margin-top:30px}.mobile-menu nav button,.mobile-menu nav a{padding:15px 0;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;text-decoration:none;color:var(--green);font-weight:650;font-size:14px}
 
 .status-banner{display:none;background:#FFF6E4;color:#725B29;border-bottom:1px solid rgba(201,154,60,.3);padding:8px 14px;text-align:center;font-size:11px}.status-banner.show{display:block}
@@ -103,7 +126,7 @@ img{display:block;max-width:100%}
   .drawer{top:auto;bottom:0;width:100%;height:min(88dvh,820px);border-radius:22px 22px 0 0;transform:translateY(103%)}.drawer.open{transform:translateY(0)}.drawer-hero{height:205px}.drawer-close{top:12px}.drawer-body{padding:18px 18px 30px}.drawer-tabs{top:-18px}.drawer-backdrop{background:rgba(10,19,15,.25)}
 }
 @media(max-width:620px){
-  .shell,.directory-shell{width:calc(100% - 24px)}.hero-grid{gap:0}.hero-copy{padding-top:6px}.hero h1{font-size:42px;line-height:1.01;margin-bottom:14px}.hero p{font-size:14px;line-height:1.5;margin-bottom:17px}.hero-photo{display:none}.search-bar{border-radius:12px;box-shadow:none}.search-bar .btn{display:none}.popular{gap:10px;margin-top:11px}.section{padding:30px 0}.section-head{align-items:flex-start}.section-head h2{font-size:27px}.section-head .text-link{display:none}.collection-card{min-width:205px;min-height:266px}.collection-image{height:110px}.neighborhood-row{gap:8px}.hood-card{min-width:138px;min-height:82px}.directory-section{padding-top:28px}.directory-head{gap:8px}.directory-head h2{font-size:27px}.directory-grid{height:auto;min-height:0;border-radius:14px 14px 0 0;display:block}.directory-grid .cafe-list{overflow:visible}.directory-grid .map-wrap{height:70dvh}.directory-grid.map-mode{height:70dvh}.cafe-list{padding:0 12px 18px}.result-meta{padding:11px 2px 6px}.cafe-row{grid-template-columns:76px minmax(0,1fr) 28px;gap:11px;padding:13px 0}.cafe-thumb{width:76px;height:76px}.cafe-title{font-size:17px}.cafe-summary{font-size:11.5px;margin:5px 0 7px;-webkit-line-clamp:2}.signals{gap:9px;font-size:9.5px}.signal:nth-child(3){display:none}.row-arrow{width:24px;height:24px}.map-badge{top:10px;right:10px}.trust-strip{padding:16px 0}.trust-item{grid-template-columns:32px 1fr}.trust-icon{width:30px;height:30px}.site-footer{padding:20px 0}.footer-inner{font-size:11px}.drawer-title{font-size:26px}.work-grid{grid-template-columns:1fr 1fr}.drawer-cta{position:sticky;bottom:-30px;background:linear-gradient(180deg,rgba(248,244,239,0),var(--paper) 25%);padding-top:22px;padding-bottom:max(2px,env(safe-area-inset-bottom))}
+  .shell,.directory-shell{width:calc(100% - 24px)}.hero-grid{gap:0}.hero-copy{padding-top:6px}.hero h1{font-size:42px;line-height:1.01;margin-bottom:14px}.hero p{font-size:14px;line-height:1.5;margin-bottom:17px}.hero-photo{display:none}.search-bar{border-radius:12px;box-shadow:none}.search-bar .btn{display:none}.search-bar.search-launcher{cursor:pointer}.popular{gap:10px;margin-top:11px}.section{padding:30px 0}.section-head{align-items:flex-start}.section-head h2{font-size:27px}.section-head .text-link{display:none}.collection-card{min-width:205px;min-height:266px}.collection-image{height:110px}.neighborhood-row{gap:8px}.hood-card{min-width:138px;min-height:82px}.directory-section{padding-top:28px}.directory-head{gap:8px;position:sticky;top:62px;z-index:18;background:rgba(248,244,239,.96);backdrop-filter:blur(12px);padding:10px 0 9px;margin-bottom:5px;border-bottom:1px solid rgba(4,59,38,.06)}.directory-head h2{font-size:27px}.directory-grid{height:auto;min-height:0;border-radius:14px 14px 0 0;display:block}.directory-grid .cafe-list{overflow:visible}.directory-grid .map-wrap{height:70dvh}.directory-grid.map-mode{height:70dvh}.cafe-list{padding:0 12px 18px}.result-meta{padding:11px 2px 6px}.cafe-row{grid-template-columns:76px minmax(0,1fr) 28px;gap:11px;padding:13px 0}.cafe-thumb{width:76px;height:76px}.cafe-title{font-size:17px}.cafe-summary{font-size:11.5px;margin:5px 0 7px;-webkit-line-clamp:2}.signals{gap:9px;font-size:9.5px}.signal:nth-child(3){display:none}.row-arrow{width:24px;height:24px}.map-badge{top:10px;right:10px}.trust-strip{padding:16px 0}.trust-item{grid-template-columns:32px 1fr}.trust-icon{width:30px;height:30px}.site-footer{padding:20px 0}.footer-inner{font-size:11px}.drawer-title{font-size:26px}.work-grid{grid-template-columns:1fr 1fr}.drawer-cta{position:sticky;bottom:-30px;background:linear-gradient(180deg,rgba(248,244,239,0),var(--paper) 25%);padding-top:22px;padding-bottom:max(2px,env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -130,8 +153,8 @@ img{display:block;max-width:100%}
       <div class="hero-copy">
         <h1>Find somewhere<br>actually good<br>to work from.</h1>
         <p>A curated guide to remote-work-friendly cafés in Mumbai, with honest notes on WiFi, outlets, noise and the work environment.</p>
-        <form class="search-bar" id="hero-search-form">
-          <div class="search-input-wrap"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="hero-search" type="search" placeholder="Search cafés, areas or keywords" autocomplete="off"></div>
+        <form class="search-bar search-launcher" id="hero-search-form">
+          <div class="search-input-wrap"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="hero-search" type="search" placeholder="Search cafés, areas or keywords" autocomplete="off" aria-label="Search cafés and areas"></div>
           <button class="btn" type="submit">Search</button>
         </form>
         <div class="popular" id="popular-areas"><span>Popular:</span></div>
@@ -186,6 +209,24 @@ img{display:block;max-width:100%}
 <div class="drawer-backdrop" id="drawer-backdrop"></div><aside class="drawer" id="drawer" aria-label="Cafe details" aria-hidden="true"></aside>
 <div class="sheet-backdrop" id="sheet-backdrop"></div>
 <section class="sheet" id="filter-sheet" aria-label="Filters"><div class="sheet-handle"></div><div class="sheet-head"><h3>Filters</h3><button class="sheet-close" id="filter-close" aria-label="Close">×</button></div><div class="sheet-group"><label>City</label><select id="m-city"></select></div><div class="sheet-group"><label>Area</label><select id="m-hood"></select></div><div class="sheet-group"><label>Work style</label><select id="m-style"><option value="">All work styles</option><option>Editor Verified</option><option>Full workday</option><option>Quiet focus</option><option>Good for calls</option><option>Open late</option></select></div><button class="btn" id="apply-mobile-filters">Apply filters</button></section>
+<div class="sheet-backdrop" id="search-backdrop"></div>
+<section class="search-sheet" id="search-sheet" aria-label="Find your cafe" aria-hidden="true">
+  <div class="search-sheet-top"><div class="sheet-handle"></div><button class="search-sheet-close" id="search-close" aria-label="Close">×</button><h3>Find your café</h3></div>
+  <div class="search-sheet-scroll">
+    <div class="search-section">
+      <h4 class="search-section-title">Where</h4>
+      <div class="search-query-wrap"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search-sheet-input" type="search" placeholder="Search café or area" autocomplete="off"></div>
+      <div class="search-suggestions" id="search-suggestions"></div>
+      <button class="search-choice" id="all-mumbai-choice" type="button"><span><strong>All Mumbai</strong><small id="all-mumbai-count">Everything in the directory</small></span><span class="choice-check">✓</span></button>
+      <div style="margin-top:16px"><div class="eyebrow" style="margin-bottom:8px">Popular areas</div><div class="search-chip-row" id="search-area-chips"></div></div>
+    </div>
+    <div class="search-section">
+      <h4 class="search-section-title">What for</h4>
+      <div class="search-purpose-grid" id="search-purpose-grid"></div>
+    </div>
+  </div>
+  <div class="search-sheet-footer"><button class="search-clear" id="search-clear" type="button">Clear all</button><button class="btn search-apply" id="search-apply" type="button">Show <span class="search-result-count" id="search-result-count">0</span> cafés</button></div>
+</section>
 <div class="sheet-backdrop" id="menu-backdrop"></div><aside class="mobile-menu" id="mobile-menu"><div class="mobile-menu-top"><img src="/assets/logo.png" alt="The Remote Cafe"><button class="icon-btn" id="mobile-menu-close" aria-label="Close menu">×</button></div><nav><button data-scroll="directory">Cafés</button><button data-scroll="neighbourhoods">Neighbourhoods</button><button data-scroll="about">About</button><a href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">Suggest a café</a><a href="https://www.instagram.com/theremotecafe" target="_blank" rel="noopener">Instagram</a></nav></aside>
 
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
@@ -199,7 +240,7 @@ const COLLECTIONS=[
  {key:'Good for calls',eyebrow:'Good for calls',title:'Good for calls',desc:'Places where taking a call is more workable.',img:'/assets/collection-calls.jpg'},
  {key:'Open late',eyebrow:'Late-night work',title:'Open late',desc:'Useful when the workday runs long.',img:'/assets/collection-late.jpg'}
 ];
-let RECORDS=[],FILTER={city:'',hood:'',style:'',q:''},map=null,markers=[],markerById=new Map(),activeId=null,popup=null;
+let RECORDS=[],FILTER={city:'',hood:'',style:'',q:''},SEARCH_DRAFT={q:'',hood:'',style:''},map=null,markers=[],markerById=new Map(),activeId=null,popup=null;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const val=v=>typeof v==='string'?v:(v&&v.name)||'';
@@ -225,9 +266,42 @@ function cafeThumb(r){const f=r.fields||{};if(f.image_url)return `<div class="ca
 function signal(type,label){return `<span class="signal">${icon(type)}<span>${esc(label)}</span></span>`}
 function renderList(){const rows=getFiltered();const list=$('#cafe-list');if(!rows.length){list.innerHTML='<div class="result-meta">0 cafés</div><div class="empty"><strong>No matches yet</strong>Try a different area, collection or search.</div>';updateMarkers(rows);return}list.innerHTML=`<div class="result-meta">${rows.length} café${rows.length===1?'':'s'}${FILTER.style?` · ${esc(FILTER.style)}`:''}</div>`+rows.map(r=>{const f=r.fields;return `<article class="cafe-row" data-id="${r.id}" tabindex="0">${cafeThumb(r)}<div><div class="cafe-title-line"><span class="cafe-title">${esc(f.name)}</span>${f.editor_verified?'<span class="verified-pill"><span class="verified-dot">✓</span>Editor Verified</span>':(val(f.source)?`<span class="research-pill">${val(f.source)==='Editor-scouted'?'Editor scouted':'Research based'}</span>`:'')}</div><div class="cafe-area">${esc([val(f.neighborhood),val(f.city)].filter(Boolean).join(', '))}</div><div class="cafe-summary">${esc(summary(r))}</div><div class="signals">${signal('wifi',clean(f.wifi_status))}${signal('noise',clean(f.noise_level))}${signal('plug',clean(f.outlet_count))}</div></div><span class="row-arrow">›</span></article>`}).join('');updateMarkers(rows)}
 function scrollDirectory(){document.querySelector('#directory').scrollIntoView({behavior:'smooth',block:'start'})}
-function setCollection(key){FILTER.style=key;FILTER.hood='';FILTER.q='';$('#hero-search').value='';syncFilters();renderList();scrollDirectory()}
-function setHood(h){FILTER.hood=h;FILTER.style='';FILTER.q='';$('#hero-search').value='';syncFilters();renderList();scrollDirectory()}
+function setCollection(key){FILTER.style=key;FILTER.hood='';FILTER.q='';$('#hero-search').value='';syncFilters();renderList();updateHeroSearchLabel();scrollDirectory()}
+function setHood(h){FILTER.hood=h;FILTER.style='';FILTER.q='';$('#hero-search').value='';syncFilters();renderList();updateHeroSearchLabel();scrollDirectory()}
 function syncFilters(){$('#filter-city').value=FILTER.city;$('#filter-hood').value=FILTER.hood;$('#filter-style').value=FILTER.style;$('#m-city').value=FILTER.city;$('#m-hood').value=FILTER.hood;$('#m-style').value=FILTER.style}
+
+function recordsForDraft(){const q=SEARCH_DRAFT.q.trim().toLowerCase();return RECORDS.filter(r=>{const f=r.fields||{};if(SEARCH_DRAFT.hood&&val(f.neighborhood)!==SEARCH_DRAFT.hood)return false;if(SEARCH_DRAFT.style&&!collectionMatch(r,SEARCH_DRAFT.style))return false;if(q){const hay=[f.name,val(f.city),val(f.neighborhood),summary(r),...arr(f.tags),...arr(f.editorial_collections)].join(' ').toLowerCase();if(!hay.includes(q))return false}return true})}
+function renderSearchSheet(){
+  const count=recordsForDraft().length;
+  $('#search-result-count').textContent=count;
+  $('#all-mumbai-count').textContent=`${RECORDS.length} café${RECORDS.length===1?'':'s'} in Mumbai`;
+  $('#all-mumbai-choice').classList.toggle('active',!SEARCH_DRAFT.hood);
+  const hoodCounts=new Map();RECORDS.forEach(r=>{const h=val(r.fields.neighborhood);if(h)hoodCounts.set(h,(hoodCounts.get(h)||0)+1)});
+  const top=[...hoodCounts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,8);
+  $('#search-area-chips').innerHTML=top.map(([h,n])=>`<button class="search-chip${SEARCH_DRAFT.hood===h?' active':''}" type="button" data-search-hood="${esc(h)}">${esc(h)} <span style="opacity:.7">${n}</span></button>`).join('');
+  $('#search-purpose-grid').innerHTML=COLLECTIONS.map(c=>`<button class="search-purpose${SEARCH_DRAFT.style===c.key?' active':''}" type="button" data-search-style="${esc(c.key)}">${esc(c.title)}</button>`).join('');
+  renderSearchSuggestions();
+}
+function renderSearchSuggestions(){
+  const q=SEARCH_DRAFT.q.trim().toLowerCase();const root=$('#search-suggestions');if(!q||q.length<2){root.innerHTML='';return}
+  const hoods=[...new Set(RECORDS.map(r=>val(r.fields.neighborhood)).filter(Boolean))].filter(h=>h.toLowerCase().includes(q)).slice(0,3);
+  const cafes=RECORDS.filter(r=>String(r.fields.name||'').toLowerCase().includes(q)).slice(0,4);
+  root.innerHTML=hoods.map(h=>`<button class="search-suggestion" type="button" data-search-hood="${esc(h)}">${icon('pin')}<span><strong>${esc(h)}</strong><span>Area</span></span></button>`).join('')+cafes.map(r=>`<button class="search-suggestion" type="button" data-search-cafe="${r.id}">${icon('wifi')}<span><strong>${esc(r.fields.name)}</strong><span>${esc(val(r.fields.neighborhood)||'Mumbai')}</span></span></button>`).join('');
+}
+function updateHeroSearchLabel(){
+  if(!isMobile())return;const bits=[];if(FILTER.q)bits.push(FILTER.q);if(FILTER.hood)bits.push(FILTER.hood);if(FILTER.style)bits.push(FILTER.style);const input=$('#hero-search');input.value='';input.placeholder=bits.length?bits.join(' · '):'Search cafés, areas or work style';
+}
+function openSearchSheet(){
+  SEARCH_DRAFT={q:FILTER.q||'',hood:FILTER.hood||'',style:FILTER.style||''};
+  $('#search-sheet-input').value=SEARCH_DRAFT.q;renderSearchSheet();$('#search-backdrop').classList.add('show');$('#search-sheet').classList.add('open');$('#search-sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+  if(!isMobile())setTimeout(()=>$('#search-sheet-input')?.focus({preventScroll:true}),160);
+}
+function closeSearchSheet(){
+  $('#search-backdrop').classList.remove('show');$('#search-sheet').classList.remove('open');$('#search-sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';
+}
+function applySearchDraft(){FILTER.q=SEARCH_DRAFT.q;FILTER.hood=SEARCH_DRAFT.hood;FILTER.style=SEARCH_DRAFT.style;syncFilters();renderList();updateHeroSearchLabel();closeSearchSheet();scrollDirectory()}
+function clearSearchDraft(){SEARCH_DRAFT={q:'',hood:'',style:''};$('#search-sheet-input').value='';renderSearchSheet()}
+
 function mapFailure(){const f=$('#map-fallback');if(f)f.classList.add('show')}function makeMap(){if(map)return;if(!window.maplibregl){mapFailure();return}let loaded=false;map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/positron',center:[72.84,19.06],zoom:10.5,attributionControl:true});map.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');const timer=setTimeout(()=>{if(!loaded)mapFailure()},6500);map.on('load',()=>{loaded=true;clearTimeout(timer);$('#map-fallback')?.classList.remove('show');updateMarkers(getFiltered())});map.on('error',()=>{})}
 function updateMarkers(rows){if(!map)return;markers.forEach(m=>m.remove());markers=[];markerById.clear();const valid=rows.filter(r=>Number.isFinite(Number(r.fields.long))&&Number.isFinite(Number(r.fields.lat)));valid.forEach(r=>{const el=document.createElement('button');el.className='cafe-marker'+(r.fields.editor_verified?' verified':'');el.type='button';el.setAttribute('aria-label',r.fields.name);el.addEventListener('click',e=>{e.stopPropagation();previewMarker(r,el)});const m=new maplibregl.Marker({element:el,anchor:'center'}).setLngLat([Number(r.fields.long),Number(r.fields.lat)]).addTo(map);markers.push(m);markerById.set(r.id,{m,el})});if(valid.length){const b=new maplibregl.LngLatBounds();valid.forEach(r=>b.extend([Number(r.fields.long),Number(r.fields.lat)]));map.fitBounds(b,{padding:isMobile()?42:58,maxZoom:13.2,duration:500})}}
 function previewMarker(r,el){$$('.cafe-marker.active').forEach(x=>x.classList.remove('active'));el.classList.add('active');if(popup)popup.remove();popup=new maplibregl.Popup({offset:14,closeButton:false,maxWidth:'260px'}).setLngLat([Number(r.fields.long),Number(r.fields.lat)]).setHTML(`<div class="popup-name">${esc(r.fields.name)}</div><div class="popup-meta">${esc(val(r.fields.neighborhood)||val(r.fields.city))}</div><button style="margin-top:8px;border:0;background:#043B26;color:white;border-radius:7px;padding:6px 9px;cursor:pointer" onclick="window.__openCafe('${r.id}')">View details</button>`).addTo(map)}
@@ -242,15 +316,17 @@ function openMenu(){ $('#menu-backdrop').classList.add('show');$('#mobile-menu')
 function closeMenu(){ $('#menu-backdrop').classList.remove('show');$('#mobile-menu').classList.remove('open');document.body.style.overflow=''}
 function bind(){
   document.addEventListener('click',e=>{const c=e.target.closest('[data-collection]');if(c)setCollection(c.dataset.collection);const h=e.target.closest('[data-hood]');if(h)setHood(h.dataset.hood);const sc=e.target.closest('[data-scroll]');if(sc){closeMenu();document.getElementById(sc.dataset.scroll)?.scrollIntoView({behavior:'smooth'})}const row=e.target.closest('.cafe-row');if(row)openCafe(row.dataset.id)});
-  document.addEventListener('keydown',e=>{if(e.key==='Enter'){const row=e.target.closest('.cafe-row');if(row)openCafe(row.dataset.id)}if(e.key==='Escape'){closeCafe();closeFilterSheet();closeMenu()}});
-  $('#drawer-backdrop').onclick=closeCafe;$('#sheet-backdrop').onclick=closeFilterSheet;$('#menu-backdrop').onclick=closeMenu;$('#filter-btn').onclick=openFilterSheet;$('#filter-close').onclick=closeFilterSheet;$('#mobile-menu-btn').onclick=openMenu;$('#mobile-menu-close').onclick=closeMenu;
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'){const row=e.target.closest('.cafe-row');if(row)openCafe(row.dataset.id)}if(e.key==='Escape'){closeCafe();closeFilterSheet();closeSearchSheet();closeMenu()}});
+  $('#hero-search-form').addEventListener('click',e=>{e.preventDefault();openSearchSheet()});$('#drawer-backdrop').onclick=closeCafe;$('#sheet-backdrop').onclick=closeFilterSheet;$('#search-backdrop').onclick=closeSearchSheet;$('#menu-backdrop').onclick=closeMenu;$('#filter-btn').onclick=openFilterSheet;$('#filter-close').onclick=closeFilterSheet;$('#search-close').onclick=closeSearchSheet;$('#mobile-menu-btn').onclick=openMenu;$('#mobile-menu-close').onclick=closeMenu;
   $('#filter-city').onchange=e=>{FILTER.city=e.target.value;FILTER.hood='';fillHoods();syncFilters();renderList()};$('#filter-hood').onchange=e=>{FILTER.hood=e.target.value;syncFilters();renderList()};$('#filter-style').onchange=e=>{FILTER.style=e.target.value;syncFilters();renderList()};
   $('#m-city').onchange=e=>{FILTER.city=e.target.value;FILTER.hood='';fillHoods();syncFilters()};$('#m-hood').onchange=e=>FILTER.hood=e.target.value;$('#m-style').onchange=e=>FILTER.style=e.target.value;$('#apply-mobile-filters').onclick=()=>{syncFilters();renderList();closeFilterSheet()};
-  $('#view-list').onclick=()=>setView('list');$('#view-map').onclick=()=>setView('map');$('#nav-map').onclick=()=>{scrollDirectory();if(isMobile())setView('map')};$('#nav-search').onclick=()=>{$('#hero-search').focus();window.scrollTo({top:0,behavior:'smooth'})};
-  $('#hero-search-form').onsubmit=e=>{e.preventDefault();FILTER.q=$('#hero-search').value;renderList();scrollDirectory()};$('#hero-search').addEventListener('input',debounce(e=>{FILTER.q=e.target.value;if(FILTER.q.length>=2||!FILTER.q)renderList()},180));
+  $('#view-list').onclick=()=>setView('list');$('#view-map').onclick=()=>setView('map');$('#nav-map').onclick=()=>{scrollDirectory();if(isMobile())setView('map')};$('#nav-search').onclick=()=>openSearchSheet();
+  $('#hero-search-form').onsubmit=e=>{e.preventDefault();openSearchSheet()};$('#hero-search').addEventListener('focus',e=>{e.target.blur();openSearchSheet()});
+  $('#search-sheet-input').addEventListener('input',debounce(e=>{SEARCH_DRAFT.q=e.target.value;renderSearchSheet()},100));$('#all-mumbai-choice').onclick=()=>{SEARCH_DRAFT.hood='';renderSearchSheet()};$('#search-clear').onclick=clearSearchDraft;$('#search-apply').onclick=applySearchDraft;
+  $('#search-sheet').addEventListener('click',e=>{const h=e.target.closest('[data-search-hood]');if(h){SEARCH_DRAFT.hood=h.dataset.searchHood;SEARCH_DRAFT.q='';$('#search-sheet-input').value='';renderSearchSheet();return}const st=e.target.closest('[data-search-style]');if(st){SEARCH_DRAFT.style=SEARCH_DRAFT.style===st.dataset.searchStyle?'':st.dataset.searchStyle;renderSearchSheet();return}const cafe=e.target.closest('[data-search-cafe]');if(cafe){const r=RECORDS.find(x=>x.id===cafe.dataset.searchCafe);if(r){SEARCH_DRAFT.q=r.fields.name;$('#search-sheet-input').value=r.fields.name;renderSearchSheet()}}});
   window.addEventListener('resize',debounce(()=>{if(!isMobile()){$('#directory-grid').classList.remove('map-mode');$('#view-list').classList.add('active');$('#view-map').classList.remove('active');makeMap()}setTimeout(()=>map?.resize(),60)},120));
 }
-async function init(){RECORDS=normalizedRecords(INITIAL_RECORDS||[]);renderCollections();renderNeighborhoods();fillSelects();renderList();bind();if(!isMobile())makeMap();const fresh=await fetchFresh();if(fresh.length){RECORDS=normalizedRecords(fresh);renderCollections();renderNeighborhoods();fillSelects();syncFilters();renderList()}else if(!RECORDS.length){$('#status-banner').classList.add('show')}}
+async function init(){RECORDS=normalizedRecords(INITIAL_RECORDS||[]);renderCollections();renderNeighborhoods();fillSelects();renderList();bind();updateHeroSearchLabel();if(!isMobile())makeMap();const fresh=await fetchFresh();if(fresh.length){RECORDS=normalizedRecords(fresh);renderCollections();renderNeighborhoods();fillSelects();syncFilters();renderList();updateHeroSearchLabel()}else if(!RECORDS.length){$('#status-banner').classList.add('show')}}
 init();
 </script>
 </body>

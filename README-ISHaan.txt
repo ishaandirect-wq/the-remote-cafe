@@ -1,29 +1,26 @@
-THE REMOTE CAFE — POLISHED PRODUCTION BUILD
+THE REMOTE CAFE — APPROVED UI REDESIGN
 
-Use this folder as the ROOT of your GitHub repository.
+What changed
+- Homepage is now editorial-first: hero search, Curated Picks, neighbourhood discovery, then the full directory.
+- Desktop keeps list + map together. Map-only is available when wanted.
+- Mobile is list-first, uses horizontal discovery cards, a bottom-sheet filter, and a bottom-sheet cafe detail view.
+- Mobile cafe lists scroll naturally with the page instead of inside a nested scroll box.
+- Search, collection cards and neighbourhood cards all feed directly into the directory filters.
+- Editor Verified remains separate from editorial collections.
+- Non-verified cafes are visually labelled as research-based/editor-scouted rather than looking verified.
+- Missing cafe photos never break the layout. image_url is optional and can be populated over time.
+- Map failure and Airtable refresh failure both degrade gracefully.
+- Existing cafe/city/neighbourhood SEO pages remain, plus crawlable editorial collection pages.
 
-Included:
-- OpenFreeMap + Leaflet map
-- Mobile List-first experience
-- Mobile cafe detail bottom sheet
-- Private Airtable API through /api/cafes
-- Build-time Airtable snapshot for SEO/fallback
-- Cafe, city and neighbourhood SEO pages
-- sitemap.xml + robots.txt
-- External logo/favicon assets
-- Resilient build: Airtable failure cannot take the homepage offline
-- UI/editorial polish pass
+Airtable fields added
+- editorial_collections: Full workday / Quiet focus / Good for calls / Open late
+- workday_fit: Strong / Situational / Poor / Unverified
+- homepage_priority: lower number appears earlier
+- image_url: optional approved cafe image
 
-Required Vercel environment variable:
-AIRTABLE_TOKEN = your read-only Airtable PAT
+What you need to do
+1. Replace the current GitHub repo contents with everything in this folder.
+2. Keep AIRTABLE_TOKEN in the Vercel project exactly as it is now.
+3. Commit. Vercel should deploy automatically.
 
-The canonical Vercel project is:
-the-remote-cafe-ind
-
-Deployment:
-1. Upload the CONTENTS of this folder to the root of the GitHub repo.
-2. Commit.
-3. Vercel should deploy automatically.
-4. Check homepage, /api/cafes, /sitemap.xml and /robots.txt.
-
-Do not create a hand-written index.html in the repo. build.js generates dist/index.html during deployment.
+No manual Airtable setup is required. The new fields have already been created and seeded.

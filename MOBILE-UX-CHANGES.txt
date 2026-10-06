@@ -1,0 +1,24 @@
+THE REMOTE CAFE — MOBILE UX PASS
+
+What changed
+- Mobile hero search is now a launcher, not a tiny inline typing field.
+- Tapping it opens a dedicated "Find your café" bottom sheet.
+- Search is intentionally limited to:
+  1. Where: café name or area
+  2. What for: Editor Verified, Full workday, Quiet focus, Good for calls, Open late
+  3. One clear Show X cafés button
+- Popular areas are surfaced as thumb-friendly chips.
+- Typing shows simple café/area suggestions.
+- Search choices update the result count before applying.
+- "Clear all" resets the draft search without affecting the page until applied.
+- The existing Filters sheet remains available for deeper filtering.
+- The directory header is sticky on small screens so Filters + List/Map stay reachable.
+- Desktop search behavior is preserved.
+
+Deliberately NOT added
+- No Nearby/location permission prompt.
+- No giant amenity checklist inside primary search.
+- No new Airtable fields.
+
+Deploy
+Upload everything in this folder to the GitHub repo root, replacing the current files. Keep the existing AIRTABLE_TOKEN in Vercel unchanged.

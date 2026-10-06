@@ -1,0 +1,12 @@
+THE REMOTE CAFE — UNIFIED SEARCH UX
+
+What changed
+- Search now uses the same simple logic on desktop and mobile: Where + What for + Show X cafes.
+- Desktop opens a centered search modal.
+- Mobile opens a bottom sheet.
+- Mobile does not force the keyboard open when the sheet launches.
+- Desktop focuses the search field immediately.
+- Search remains separate from advanced Filters.
+- The same curated collections and neighbourhood choices power both experiences.
+
+No Airtable changes are required for this release.

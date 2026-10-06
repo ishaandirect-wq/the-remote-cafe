@@ -1,0 +1,26 @@
+AIRTABLE CHANGES MADE FOR THE UI REDESIGN
+
+Kept unchanged
+- status controls whether a cafe is public
+- editor_verified controls the Editor Verified trust signal
+- editor_review controls Editor's Take
+
+Added
+1. editorial_collections
+   Multi-select used only for curated discovery sections.
+   Current options: Full workday, Quiet focus, Good for calls, Open late.
+   This does NOT imply Editor Verified.
+
+2. workday_fit
+   Overall editorial summary: Strong, Situational, Poor, Unverified.
+   Editor Verified cafes were assessed using the existing structured fields + editor notes.
+   Non-verified cafes currently default to Unverified.
+
+3. homepage_priority
+   Simple ordering control. Lower numbers appear first.
+   Seeded so the current Editor Verified cafes lead the directory.
+
+4. image_url
+   Optional. The site has an intentional visual fallback when blank, so adding a cafe never requires an image.
+
+Seeded editorial collections conservatively from the existing Airtable evidence. These can be updated directly in Airtable or by asking ChatGPT to change them.
