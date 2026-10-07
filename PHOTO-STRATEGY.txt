@@ -1,0 +1,17 @@
+THE REMOTE CAFE — PHOTO STRATEGY
+
+This build deliberately does not use live Google cafe photos or Google Places UI Kit.
+
+Why
+- No Google photo/API cost while visitors browse or open cafes.
+- No Google browser API key is required for cafe photos.
+- The interface stays fully TRC-designed rather than embedding Google-styled components.
+- Missing photography looks intentional rather than broken.
+
+How it works
+- If Airtable image_url contains a TRC-controlled/approved image, the site displays it.
+- If image_url is blank, cards use an editorial TRC tile and the cafe drawer uses a branded typographic cover.
+- The drawer links to Google Maps for current venue photos and directions. This is a normal outbound link and does not require a Google API key.
+
+Long-term
+Add owned/permissioned cafe photography gradually through venue submissions, contributors, verification visits, official press assets or other rights-cleared sources. There is no requirement for every cafe to have an image before it can look complete on the site.
