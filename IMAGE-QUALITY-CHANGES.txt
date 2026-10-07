@@ -1,0 +1,19 @@
+THE REMOTE CAFE — IMAGE QUALITY CLEANUP
+
+What was causing the blur
+- The five Curated Picks images were only ~175 x 116 px.
+- The homepage hero was only 511 x 310 px.
+- Cafe image_url photos were reused in the large detail drawer without checking whether the source had enough pixels.
+
+What changed
+- Reprocessed the bundled hero to 1536 px wide for high-DPI screens.
+- Reprocessed the five Curated Picks images to ~700 x 464 px instead of relying on browser enlargement.
+- Added restrained contrast/sharpness treatment to the built-in editorial imagery.
+- Added lazy loading and async decoding to below-the-fold collection imagery.
+- Cafe thumbnails now request a larger rendition from resizable image CDNs where supported.
+- Cafe detail drawers request a larger rendition than list thumbnails.
+- Added a resolution guard: if a cafe image is too small for the space it is being shown in, the site uses the clean TRC fallback instead of stretching it into a blurry photo.
+- Broken image URLs also fall back cleanly.
+
+Important
+This fixes the display pipeline and prevents low-resolution cafe photos from looking bad at larger sizes. The bundled homepage images were enhanced from the originals supplied in the previous build. If original full-resolution versions of those six photos become available later, replacing the files in /assets will improve them further without any additional code changes.

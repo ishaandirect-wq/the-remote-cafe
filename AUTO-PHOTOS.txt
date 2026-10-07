@@ -1,0 +1,29 @@
+TRC COST-CONTROLLED PHOTO SYSTEM
+================================
+
+What changed
+------------
+TRC no longer requests Google photos while visitors browse or scroll the cafe directory.
+
+Photo priority
+--------------
+1. If Airtable image_url has an approved TRC-controlled image, the native TRC card and drawer use it.
+2. If image_url is blank, directory cards use a branded TRC placeholder at zero Google cost.
+3. Only after a visitor opens a cafe drawer, and only when that cafe has google_place_id, TRC instantiates a Google Places UI Kit Place Details media component for that cafe.
+4. If Google cannot load or the UI Kit is unavailable, the branded TRC fallback stays visible.
+
+Cost controls
+-------------
+- Zero Google Places UI Kit photo/media requests from scrolling the directory.
+- One UI Kit component is created only after deliberate cafe-detail interaction.
+- Reopening the same cafe during the same page session reuses the already-created component rather than creating another one.
+- Google Places UI Kit handles the photo and required attribution inside the component.
+
+Why this version
+----------------
+The directory remains fully TRC-designed, fast and predictable, while rich cafe photography is reserved for the moment a visitor shows intent by opening a cafe.
+This keeps Google usage far below a photo-on-every-card architecture.
+
+Google Cloud note
+-----------------
+The browser API key must be allowed to use Maps JavaScript API / Places UI Kit and should remain restricted to the intended site referrers and APIs.

@@ -1,0 +1,15 @@
+COST MODEL
+==========
+
+This build is intentionally designed so browsing the cafe list does not instantiate Google Places UI Kit components.
+Only opening a cafe without an image_url can create a billable Places UI Kit Query.
+
+As of October 2026, Google lists the India Places UI Kit Query SKU in Essentials with 70,000 free monthly requests and $0.30 per 1,000 requests in the first paid tier. Confirm current Google pricing before relying on these exact numbers long term.
+
+Example at current pricing:
+- 10,000 cafe-detail opens/month: within free allowance
+- 50,000 cafe-detail opens/month: within free allowance
+- 70,000 cafe-detail opens/month: at the listed free cap
+- 100,000 cafe-detail opens/month: roughly 30,000 paid requests, about $9 before taxes/FX
+
+These examples refer to UI Kit requests, not page views. A visitor who only browses/searches without opening cafe drawers generates no UI Kit requests from this photo system.

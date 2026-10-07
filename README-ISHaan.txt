@@ -24,3 +24,14 @@ What you need to do
 3. Commit. Vercel should deploy automatically.
 
 No manual Airtable setup is required. The new fields have already been created and seeded.
+
+COST-CONTROLLED CAFE PHOTOS
+----------------------------
+This version does NOT pull Google photos while people browse the cafe list.
+Cards use an approved image_url when one exists; otherwise they use a clean TRC placeholder.
+Only when somebody opens a cafe with a google_place_id and no image_url does the site load one Google Places UI Kit media component.
+Reopening that same cafe in the same page session reuses the existing component.
+
+The existing restricted Google browser key is already wired into this build, so there is no new Vercel environment variable to add for photos.
+If Places UI Kit is not enabled in that Google Cloud project, the site simply keeps the TRC fallback rather than breaking.
+See AUTO-PHOTOS.txt and COST-CONTROL-PHOTOS.txt for the implementation and cost model.
