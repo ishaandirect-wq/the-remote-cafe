@@ -26,3 +26,11 @@ What you need to do
 
 No Google API key or Places UI Kit setup is required for this build.
 No Airtable changes are required.
+
+Visual refinement
+- Restored the earlier homepage line: “Find somewhere actually good to work from.”
+- Sized the full logo to fit the navigation bar and matched the bar to the logo background.
+- Removed acronym stamps and repeated category labels from café and discovery tiles.
+- Kept the no-photo fallback quiet and information-led.
+- Removed the duplicated drawer summary when an Editor's Take is present and made card excerpts end cleanly.
+- Kept Editor Verified, Editor's Take and curated collection membership independent.
