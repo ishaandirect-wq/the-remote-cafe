@@ -196,12 +196,16 @@ body{background:var(--paper)}
 .collection-dialog-count{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
 @media(max-width:620px){.collection-dialog{width:calc(100vw - 20px);max-height:88dvh;border-radius:14px}.collection-dialog-head{padding:24px 18px 18px}.collection-dialog-head h2{font-size:29px}.collection-dialog-list{padding:0 18px 18px}.collection-image{height:142px}}
 
+/* One transparent logo asset; constrain height so it cannot spill out of navigation. */
+.brand img{display:block;width:auto;height:48px;max-width:160px;object-fit:contain;background:transparent;filter:none;mix-blend-mode:normal}
+.mobile-menu-top img{display:block;width:auto;height:48px;max-width:160px;object-fit:contain;background:transparent}
+@media(max-width:620px){.brand img{height:40px;width:auto;max-width:135px}}
 </style>
 </head>
 <body>
 <header class="site-nav">
   <div class="shell nav-inner">
-    <a class="brand" href="#top" aria-label="The Remote Cafe home"><img src="/assets/logo.png" alt="The Remote Cafe"></a>
+    <a class="brand" href="#top" aria-label="The Remote Cafe home"><img src="/assets/logo-transparent-v2.png" alt="The Remote Cafe"></a>
     <nav class="nav-links" aria-label="Primary">
       <button class="nav-city" type="button" data-scroll="directory">Mumbai <svg class="icon" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></svg></button>
       <a href="#directory">Cafés</a><a href="#neighbourhoods">Neighbourhoods</a><a href="#about">About</a>
@@ -303,7 +307,7 @@ body{background:var(--paper)}
   </div>
   <div class="search-sheet-footer"><button class="search-clear" id="search-clear" type="button">Clear all</button><button class="btn search-apply" id="search-apply" type="button">Show <span class="search-result-count" id="search-result-count">0</span> cafés</button></div>
 </section>
-<div class="sheet-backdrop" id="menu-backdrop"></div><aside class="mobile-menu" id="mobile-menu"><div class="mobile-menu-top"><img src="/assets/logo.png" alt="The Remote Cafe"><button class="icon-btn" id="mobile-menu-close" aria-label="Close menu">×</button></div><nav><button data-scroll="directory">Cafés</button><button data-scroll="neighbourhoods">Neighbourhoods</button><button data-scroll="about">About</button><a href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">Suggest a café</a><a href="https://www.instagram.com/theremotecafe" target="_blank" rel="noopener">Instagram</a></nav></aside>
+<div class="sheet-backdrop" id="menu-backdrop"></div><aside class="mobile-menu" id="mobile-menu"><div class="mobile-menu-top"><img src="/assets/logo-transparent-v2.png" alt="The Remote Cafe"><button class="icon-btn" id="mobile-menu-close" aria-label="Close menu">×</button></div><nav><button data-scroll="directory">Cafés</button><button data-scroll="neighbourhoods">Neighbourhoods</button><button data-scroll="about">About</button><a href="https://tinyurl.com/theremotecafe" target="_blank" rel="noopener">Suggest a café</a><a href="https://www.instagram.com/theremotecafe" target="_blank" rel="noopener">Instagram</a></nav></aside>
 
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 <script>
